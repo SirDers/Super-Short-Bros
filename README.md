@@ -22,7 +22,7 @@
 
 ## Description
 - This was my computer Science 2 final project during my first year at University of Wisconsin-Stout.
-- I wanted to challenge myself with a tile-scrolling 2D platformer. This was my first time making a game in java and I used many work arounds to finish it on time, so there are many areas of improvement in the code.
+- I wanted to challenge myself with a tile-scrolling 2D platformer. This was my first time making a game in java and I used several work arounds to finish it on time, so there are many areas of improvement in the code.
 - There are 4 levels:
 1. Grass 1 -- Easy and teaches controls (Has secret exit)
 2. Grass 2 -- Difficult (Has secret exit)
@@ -30,6 +30,3 @@
 4. Chess World -- Player changes into different chess pieces the have different abilities
 
 Make your own levels with the level editor too!
-
-# Credits
-- All art assets were created by Anders Halverson.
