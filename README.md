@@ -1,6 +1,6 @@
 # Super-Short-Bros.
 ## How to Run
-1. Download and Extract the 'SuperShortBros.zip' under 'Releases'.
+1. Download and Extract the 'SuperShortBros_Muted.zip' under 'Releases'.
 2. Extract the zip.
 3. Double-click 'SuperShortBros.exe' to start the game.
 4. (Windows Defender may warn about this executable because it’s an unsigned first release. The file is safe to run.)
