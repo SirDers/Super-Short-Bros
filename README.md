@@ -18,7 +18,7 @@
 - 'A' 'D' -- Left-Right movement
 - 'J' -- Run
 - 'K' -- Jump
-- 'F' -- (Only for Level 4) Use special ability
+- 'L' -- (Only for Level 4) Use special ability
 
 ## Description
 - This was my computer Science 2 final project during my first year at University of Wisconsin-Stout.
@@ -27,6 +27,6 @@
 1. Grass 1 -- Easy and teaches controls (Has secret exit)
 2. Grass 2 -- Difficult (Has secret exit)
 3. Ring City -- Very difficult. (I wanted one challenging level for the project)
-4. Chess World -- Player changes into different chess pieces the have different abilities
+4. Chess World -- Player changes into different chess pieces that have different abilities using L.
 
 Make your own levels with the level editor too!
