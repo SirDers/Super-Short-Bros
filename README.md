@@ -1,4 +1,20 @@
 # Super-Short-Bros.
+## Description
+A short 2D platformer written in JavaFX. This was my computer Science 2 final project during my first year at University of Wisconsin-Stout. I wanted to challenge myself with a tile-scrolling 2D platformer. This was my first time making a game in java and I used several work arounds to finish it on time, so there are many areas of improvement in the code.
+
+There are 4 levels:
+1. **Grass 1** -- Easy; teaches controls (Has secret exit)
+2. **Grass 2** -- Easy; shows player existence of secrete exits  (Has secret exit)
+3. **Ring City** -- Very difficult. (I wanted one challenging level for the project. A level like this would be a final challenge after the player has completed all levels before it.)
+4. **Chess World** -- Player changes into different chess pieces that have different abilities using L. (This is just a quick demo I made for an idea I had with chess-themed power-ups.)
+
+Make your own levels with the level editor too!
+
+### Features
+- Custom level file format
+- Fully integrated level editor
+- Legally distinct sprite artwork
+
 ## How to Run
 1. Download and Extract the 'SuperShortBros_Muted.zip' under 'Releases'.
 2. Extract the zip.
@@ -19,14 +35,3 @@
 - 'J' -- Run
 - 'K' -- Jump
 - 'L' -- (Only for Level 4) Use special ability
-
-## Description
-- This was my computer Science 2 final project during my first year at University of Wisconsin-Stout.
-- I wanted to challenge myself with a tile-scrolling 2D platformer. This was my first time making a game in java and I used several work arounds to finish it on time, so there are many areas of improvement in the code.
-- There are 4 levels:
-1. Grass 1 -- Easy; teaches controls (Has secret exit)
-2. Grass 2 -- Easy; shows player existence of secrete exits  (Has secret exit)
-3. Ring City -- Very difficult. (I wanted one challenging level for the project. A level like this would be a final challenge after the player has completed all levels before it.)
-4. Chess World -- Player changes into different chess pieces that have different abilities using L. (This is just a quick demo I made for an idea I had with chess-themed power-ups.)
-
-Make your own levels with the level editor too!
