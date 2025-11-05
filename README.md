@@ -13,7 +13,8 @@ Make your own levels with the level editor too!
 ### Features
 - Custom level file format
 - Fully integrated level editor
-- Legally distinct sprite artwork
+- Distinct sprite artwork
+- Consistent and smooth game physics
 
 ## How to Run
 1. Download and Extract the 'SuperShortBros_Muted.zip' under 'Releases'.
