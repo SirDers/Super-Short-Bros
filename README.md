@@ -1,14 +1,14 @@
 # Super-Short-Bros.
 ## Description
-A short 2D platformer written in JavaFX. This was my computer Science 2 final project during my first year at University of Wisconsin-Stout. I wanted to challenge myself with a tile-scrolling 2D platformer. This was my first time making a game in java and I used several work arounds to finish it on time, so there are many areas of improvement in the code.
+A short 2D platformer written in JavaFX. This was my Computer Science 2 final project during my first year at University of Wisconsin-Stout. I wanted to challenge myself with a tile-scrolling 2D platformer. This was my first time making a game in Java and I used several work arounds to finish it on time, so there are many areas of improvement in the code.
 
 There are 4 levels:
 1. **Grass 1** -- Easy; teaches controls (Has secret exit)
-2. **Grass 2** -- Easy; shows player existence of secrete exits  (Has secret exit)
-3. **Ring City** -- Very difficult. (I wanted one challenging level for the project. A level like this would be a final challenge after the player has completed all levels before it.)
-4. **Chess World** -- Player changes into different chess pieces that have different abilities using L. (This is just a quick demo I made for an idea I had with chess-themed power-ups.)
+2. **Grass 2** -- Easy; shows player existence of secret exits  (Has secret exit)
+3. **Ring City** -- Very difficult; I wanted one challenging level for the project. A level like this would be a final challenge after the player has completed all levels before it.
+4. **Chess World** -- Player changes into different chess pieces that have different abilities using L. (This is just a quick demo I made for an idea I had with chess-themed power-ups. It is not well implemented at this time.)
 
-Make your own levels with the level editor too!
+Make your own levels with the level editor too! (For a new empty level, delete or move the level1.bin file from the project folder. Opening the exe will create a new empty level1.bin for you to edit.)
 
 ### Features
 - Custom level file format
@@ -26,9 +26,9 @@ Make your own levels with the level editor too!
 ### Edit Mode
 - '0' -- Toggle Edit Mode.
 - 'P' -- Save changes to level.
-- '1' to '7' -- Change currently selected block or object. (Press the same number for more blocks/objects of that category).
-- 'Q' -- Select Erase tool.
-- '-' -- Disable Edit Mode Toggling and enable deaths to reset at spawn point.
+- '1' to '7' -- Change currently selected block or object. (Press the same number for more blocks/objects of that category.)
+- 'Q' -- Select Erase tool. (Pressing Q again will turn the eraser orange, which deletes Objects instead -- like enemies or stellas.)
+- '-' -- Disable Edit Mode Toggling, and enable deaths to reset at spawn point.
 - Arrow keys -- Change width and height of level.
 
 ### Player Movement
