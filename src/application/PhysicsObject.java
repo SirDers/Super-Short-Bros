@@ -64,52 +64,46 @@ public abstract class PhysicsObject {
     // Load images
     protected ArrayList<Image> images = new ArrayList<Image>();
     
+    
+    
     // Constructors
+    
+    // Base
     public PhysicsObject(int tileX, int tileY) {
     	setSpawn(tileX, tileY);
     	reset();
     	loadImages();
 	}
     
+    // With size
     public PhysicsObject(int tileX, int tileY, double WIDTH, double HEIGHT) {
+    	this(tileX, tileY);
     	setSize(WIDTH, HEIGHT);
-    	setSpawn(tileX, tileY);
-    	reset();
-    	loadImages();
 	}
     
+    // With size, speed, and acceleration
     public PhysicsObject(int tileX, int tileY, double WIDTH, double HEIGHT, double ACCELERATION_X, double ACCELERATION_Y, double MAX_SPEED_X, double MAX_SPEED_Y) {
-    	setSize(WIDTH, HEIGHT);
-    	setSpawn(tileX, tileY);
+    	this(tileX, tileY, WIDTH, HEIGHT);
     	setAccel(ACCELERATION_X, ACCELERATION_Y);
     	setMaxSpeed(MAX_SPEED_X, MAX_SPEED_Y);
-    	reset();
-    	loadImages();
 	}
     
+    // With property
     public PhysicsObject(int tileX, int tileY, int property) {
-    	setSpawn(tileX, tileY);
-    	reset();
+    	this(tileX, tileY);
     	this.property = property;
-    	loadImages();
 	}
     
+    // With size, and property
     public PhysicsObject(int tileX, int tileY, double WIDTH, double HEIGHT, int property) {
-    	setSize(WIDTH, HEIGHT);
-    	setSpawn(tileX, tileY);
-    	reset();
+    	this(tileX, tileY, WIDTH, HEIGHT);
     	this.property = property;
-    	loadImages();
 	}
-    
+
+    // With size, speed, acceleration, and property
     public PhysicsObject(int tileX, int tileY, double WIDTH, double HEIGHT, double ACCELERATION_X, double ACCELERATION_Y, double MAX_SPEED_X, double MAX_SPEED_Y, int property) {
-    	setSize(WIDTH, HEIGHT);
-    	setSpawn(tileX, tileY);
-    	setAccel(ACCELERATION_X, ACCELERATION_Y);
-    	setMaxSpeed(MAX_SPEED_X, MAX_SPEED_Y);
-    	reset();
+    	this(tileX, tileY, WIDTH, HEIGHT, ACCELERATION_X, ACCELERATION_Y, MAX_SPEED_X, MAX_SPEED_Y);
     	this.property = property;
-    	loadImages();
 	}
     
     public void setSpawn(int tileX, int tileY) {
@@ -234,10 +228,12 @@ public abstract class PhysicsObject {
 	    collisionFixPoint(x + width/2 - TINY, y - height/2, dx, dy);
     }
     
+	protected int onTile;
+	
     protected void collisionFixPoint(double x, double y, double dx, double dy) {
-    	int onTile = Tiles.getTileType(x, y);
+    	onTile = Tiles.getTileType(x, y);
     	
-    	if (onTile == 0 || onTile == 9) {
+    	if (onTile == 0 || onTile == 9 || onTile == 38) {
     		return;
     	}
     	

@@ -266,6 +266,8 @@ public class Player extends PhysicsObject {
 	}
 	
 	public void playDead(ArrayList<PhysicsObject> objects) {
+		if (deadFrames == 0) speedY = -accelY*1.5;
+		
 		deadFrames += 1;
 		if (!Editor.isDevMode()) {
 			if (deadFrames >= 180) {
@@ -483,6 +485,14 @@ public class Player extends PhysicsObject {
     protected void onTileColYUp() {
 		jumping = 0;
 	}
+    
+    @Override
+    protected void collisionFixPoint(double x, double y, double dx, double dy) {
+    	super.collisionFixPoint(x, y, dx, dy);
+    	if (onTile >= 25 && onTile <= 28) {
+    		dead = true;
+    	}
+    }
     
     @Override
     protected void onObjCollision(ArrayList<PhysicsObject> objects, ArrayList<PhysicsObject> toRemove, PhysicsObject object, double overlapBottom, double overlapTop, double overlapRight, double overlapLeft) {

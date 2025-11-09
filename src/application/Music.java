@@ -18,7 +18,6 @@ public class Music {
         try {
     		Music.setMusic(Tiles.theme);
 
-    		if (Tiles.theme == 4) return;
             new Thread(() -> {
                 boolean previousEditMode = Editor.editMode;
                 while (stage.isShowing()) {
@@ -28,7 +27,8 @@ public class Music {
                         double currentTime = currentPlayer.getCurrentTime().toSeconds();
 
                         String newSongPath = Editor.editMode ? editSongPath : currentSongPath;
-                        fadeTransitionSimultaneous(newSongPath, currentTime);
+                		if (Tiles.theme != 4 && Tiles.theme != 2)
+                			fadeTransitionSimultaneous(newSongPath, currentTime);
                     }
 
                     try {
@@ -52,7 +52,7 @@ public class Music {
         if (currentPlayer != null) {
             currentPlayer.stop();
         }
-        if (type == 4) {
+        if (type == 4 || type == 2) {
             playSong(currentSongPath, 0);
             return;
         }

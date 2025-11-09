@@ -35,6 +35,7 @@ public class Controls {
 	public static boolean key5 = false;
 	public static boolean key6 = false;
 	public static boolean key7 = false;
+	public static boolean key8 = false;
 	public static boolean key9 = false;
 
 	public static boolean keyLEFT = false;
@@ -60,6 +61,7 @@ public class Controls {
 	public static boolean key5pressed = false;
 	public static boolean key6pressed = false;
 	public static boolean key7pressed = false;
+	public static boolean key8pressed = false;
 	public static boolean key9pressed = false;
 
 	public static boolean keyLEFTpressed = false;
@@ -102,6 +104,7 @@ public class Controls {
 		key5 = pressedKeys.contains(KeyCode.DIGIT5);
 		key6 = pressedKeys.contains(KeyCode.DIGIT6);
 		key7 = pressedKeys.contains(KeyCode.DIGIT7);
+		key8 = pressedKeys.contains(KeyCode.DIGIT8);
 		key9 = pressedKeys.contains(KeyCode.DIGIT9);
 
 		keyLEFT = pressedKeys.contains(KeyCode.LEFT);
@@ -126,6 +129,7 @@ public class Controls {
 		key5pressed = pressed(key5, 5);
 		key6pressed = pressed(key6, 6);
 		key7pressed = pressed(key7, 7);
+		key8pressed = pressed(key8, 8);
 		key9pressed = pressed(key9, 9);
 
 		keyLEFTpressed = pressed(keyLEFT, 10);

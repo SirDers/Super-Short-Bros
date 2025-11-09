@@ -7,7 +7,8 @@ VERSION 0.4.8
 
 package application;
 
-import java.io.IOException;
+import java.io.IOException;import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
@@ -21,10 +22,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    private static final int TILE_COUNT_X = 33; // Visible tiles horizontally
-    private static final int TILE_COUNT_Y = 21; // Visible tiles vertically
-    public static final int CANVAS_WIDTH = (TILE_COUNT_X - 1) * Tiles.SIZE;
-    public static final int CANVAS_HEIGHT = (TILE_COUNT_Y - 1) * Tiles.SIZE;
+    private static int TILE_COUNT_X = 33; // Visible tiles horizontally
+    private static int TILE_COUNT_Y = 21; // Visible tiles vertically
+    public static int CANVAS_WIDTH;
+    public static int CANVAS_HEIGHT;
 
     private Canvas canvas;
     private StackPane root;
@@ -51,6 +52,28 @@ public class Main extends Application {
     
     @Override
     public void start(Stage stage) {
+    	// Get computer screen resolution
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension screenSize = toolkit.getScreenSize();
+        CANVAS_WIDTH = (int) screenSize.getWidth();
+        CANVAS_HEIGHT = (int) screenSize.getHeight();
+        
+
+        //CANVAS_WIDTH /= 2;
+        //CANVAS_HEIGHT /= 2;
+        
+        // Always have 21 tiles visible vertically
+        // Wider screen = more horizontal tiles visible
+        TILE_COUNT_X = TILE_COUNT_Y * CANVAS_WIDTH / CANVAS_HEIGHT;
+        
+
+        // Set tile size relative to resolution
+    	Tiles.SIZE = (int) (CANVAS_HEIGHT / (TILE_COUNT_Y - 1));
+        
+        // Weird glitch where if Tiles.SIZE is less than 29 it crashes?
+        if (Tiles.SIZE < 29) Tiles.SIZE = 29;
+        
+        
         // Initialize Canvas and GraphicsContext
         canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
         canvas.getGraphicsContext2D().setImageSmoothing(false);
@@ -137,7 +160,6 @@ public class Main extends Application {
     }
 
     private void render() {
-        
     	gc.setFill(Color.rgb(100, 200, 250));
         gc.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         
@@ -153,7 +175,6 @@ public class Main extends Application {
         gc.setFill(Color.rgb(0, 0, 0, 0.2));
         if (Tiles.theme == 4) gc.setFill(Color.rgb(0, 0, 0, 0.3));
         gc.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        
         
         Tiles.render(gc, textField, player, objects, camera.getX(), camera.getY(), TILE_COUNT_X, TILE_COUNT_Y);
         

@@ -11,12 +11,12 @@ public class Backdrop {
     			new Image("file:resources/images/backgrounds/sky1.png")
     		},
     		{
-    	    	new Image("file:resources/images/backgrounds/layer0-2.png"),
+    			new Image("file:resources/images/backgrounds/layer0-2.png"),
     	    	new Image("file:resources/images/backgrounds/layer1-2.png"),
-    	    	new Image("file:resources/images/backgrounds/sky3.png")
+    	    	new Image("file:resources/images/backgrounds/sky1.png")
     		},
     		{
-    			new Image("file:resources/images/backgrounds/layer0-2.png"),
+    			new Image("file:resources/images/backgrounds/layer0-3.png"),
     	    	new Image("file:resources/images/backgrounds/layer1-3.png"),
     	    	new Image("file:resources/images/backgrounds/sky3.png")
     		},

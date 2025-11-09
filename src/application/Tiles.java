@@ -21,7 +21,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
 public class Tiles {
-    public static final int SIZE = 40; // Tile size in pixels
+    public static int SIZE = 40; // Tile size in pixels
     public static int WIDTH = 128; // Number of tiles horizontally in the level
     public static int HEIGHT = 40; // Number of tiles vertically in the level
 
@@ -32,19 +32,26 @@ public class Tiles {
     
     // Edit tile type
     private static int brush = 1;
+    private static int editSet = 0;
     
     // Edit group
-    private static int[] tileKeyMap = {
-    		9,
-    		1, 1,
-    		2, 2, 2, 2, 2, 2,
-    		3,
-    		4,
-    		5, 
-    		0,
-    		5, 5,
-    		6,
-    		7, 7, 7, 7, 7, 7, 7, 7, 7
+    private static int[][] tileKeyMap = {
+    		{
+	    		9,
+	    		1, 1,
+	    		2, 2, 2, 2, 2, 2,
+	    		3,
+	    		4,
+	    		5, 
+	    		0,
+	    		5, 5,
+	    		6,
+	    		7, 7, 7, 7, 7, 7, 7, 7, 7,
+	    		8, 8, 8, 8
+    		},
+    		{
+    			2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+    		}
     		};
 
 	private static int[] objectMap = {
@@ -85,6 +92,21 @@ public class Tiles {
     	    new Image("file:resources/images/tiles/future-7.png"),
     	    new Image("file:resources/images/tiles/future-8.png"),
     	    new Image("file:resources/images/tiles/future-9.png"),
+    	    new Image("file:resources/images/tiles/spike-1.png"),
+    	    new Image("file:resources/images/tiles/spike-2.png"),
+    	    new Image("file:resources/images/tiles/spike-3.png"),
+    	    new Image("file:resources/images/tiles/spike-4.png"),
+    	    new Image("file:resources/images/tiles/grass2-1.png"),
+    	    new Image("file:resources/images/tiles/grass2-2.png"),
+    	    new Image("file:resources/images/tiles/grass2-3.png"),
+    	    new Image("file:resources/images/tiles/grass2-4.png"),
+    	    new Image("file:resources/images/tiles/grass2-5.png"),
+    	    new Image("file:resources/images/tiles/grass2-6.png"),
+    	    new Image("file:resources/images/tiles/grass2-7.png"),
+    	    new Image("file:resources/images/tiles/grass2-8.png"),
+    	    new Image("file:resources/images/tiles/grass2-9.png"),
+    	    new Image("file:resources/images/tiles/grass2-mg.png"),
+    	    new Image("file:resources/images/tiles/objectEdit.png"),
     };
     
     
@@ -161,7 +183,6 @@ public class Tiles {
         	int tileY = (int) (Math.floor((Mouse.y + Camera.y) / SIZE));
         	
         	// Editing Tile:
-        	
         	double offsetX = Camera.x % SIZE;
         	double offsetY = Camera.y % SIZE;
         	double drawX = (int) ((Mouse.x + offsetX) / SIZE) * SIZE - offsetX;
@@ -170,22 +191,28 @@ public class Tiles {
         	drawTile(gc, player, brush, drawX, drawY, true);
         	
         	// Edit Mode graphic:
-        	
+    		drawEditBox(gc, 16, 8, 0); // Edit Mode
+        	switch (editSet) {
+        	case 1:
+            	drawEditBox(gc, 1, 0, 30); // Plain Orange tiles
+        		break;
+        	default: // 0
+            	drawEditBox(gc, 0, 0, 1); // Plain tiles
+            	drawEditBox(gc, 1, 0, 6); // Grass tiles
+            	drawEditBox(gc, 2, 0, 9); // Spawn tile
+            	drawEditBox(gc, 3, 0, 10); // Stella
+            	drawEditBox(gc, 4, 0, 11); // Asteos
+            	drawEditBox(gc, 5, 0, 15); // Soliseye
+            	drawEditBox(gc, 6, 0, 16); // Future tiles
+            	drawEditBox(gc, 7, 0, 25); // Spike tiles
+        		break;	
+        	}
 
-        	drawEditBox(gc, 16, 8, 0); // Edit Mode
-        	
-        	drawEditBox(gc, 0, 0, 1); // Plain tiles
-        	drawEditBox(gc, 1, 0, 6); // Grass tiles
-        	drawEditBox(gc, 2, 0, 9); // Spawn tile
-        	drawEditBox(gc, 3, 0, 10); // Stella
-        	drawEditBox(gc, 4, 0, 11); // Asteos
-        	drawEditBox(gc, 5, 0, 15); // Soliseye
-        	drawEditBox(gc, 6, 0, 16); // Future tiles
-
+        	drawEditBox(gc, 8, 0, 39); // Edit Set
         	drawEditBox(gc, 0, 1, 0); // Eraser
         	
-        	// Edit level:
         	
+        	// Edit level:
         	if (Mouse.isDown) {
         		editLevel(gc, tf, objects, player, tileX, tileY);
         		Editor.setChanged(true);
@@ -266,6 +293,12 @@ public class Tiles {
     	if (Controls.key7pressed) {
     		nextBrush(7);
     	}
+    	if (Controls.key8pressed) {
+    		nextBrush(8);
+    	}
+    	if (Controls.key9pressed) {
+    		nextEditSet(9);
+    	}
     	
     	if (Controls.keyQpressed) {
     		if (brush == 0)
@@ -276,15 +309,40 @@ public class Tiles {
     }
     
     private static void nextBrush(int key) {
-    	for ( int i = 0 ; i < tileKeyMap.length ; i++) {
-    		if (brush < tileKeyMap.length - 1)
+    	
+    	if (editSet == 1) {
+    		if (key != 2) return;
+    		
+			if (brush != 0 && brush != 12) brush -= 29;
+		}
+    	
+    	for ( int i = 0 ; i < tileKeyMap[editSet].length ; i++) {
+    		if (brush < tileKeyMap[editSet].length - 1)
     			brush += 1;
     		else
     			brush = 0;
     		
-    		if (tileKeyMap[brush] == key)
+    		
+    		if (tileKeyMap[editSet][brush] == key) {
+    			if (editSet == 1) {
+        			brush += 29;
+        		}
     			return;
+    		}
     	}
+    }
+    
+    private static void nextEditSet(int key) {
+    	if (editSet < tileKeyMap.length - 1)
+			editSet += 1;
+		else
+			editSet = 0;
+    	
+    	if (editSet == 0) {
+			brush = 6;
+		} else if (editSet == 1) {
+			brush = 29;
+		}
     }
     
     private static int getProperty(GraphicsContext gc, TextField tf) {
@@ -318,11 +376,7 @@ public class Tiles {
     		str = "0";
     		break;
     	}
-    	/*
-    	gc.setStroke(Color.NAVY);
-    	gc.setLineWidth(0.03 * SIZE);
-		gc.setFont(Font.getDefault());
-		*/
+    	
     	gc.setLineWidth(3);
     	gc.setFill(Color.WHITE);
 		gc.setFont(Font.font(15));

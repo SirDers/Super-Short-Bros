@@ -85,11 +85,12 @@ public class Editor {
     		
     		// T: Changes theme
     		if (Controls.keyTpressed) {
-    			if (Tiles.theme < 3)
+    			if (Tiles.theme < 4)
     				Tiles.theme += 1;
     			else {
     				Tiles.theme = 1;
     			}
+    			Music.setMusic(Tiles.theme);
         	}
     		
     		// Change Width and Height with arrows

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class Store {
 	
-	// NEW LEVEL SAVE
+	// LEVEL SAVE
 	public static void saveLevel(int num, ArrayList<PhysicsObject> objects, boolean isBackup) throws IOException {
 		File level;
 		if (isBackup) {
@@ -27,10 +27,19 @@ public class Store {
 		FileOutputStream fos;
 		fos = new FileOutputStream(level);
 		DataOutputStream dos = new DataOutputStream(fos);
+		
+		// Unique Code: 19879
+    	writeValue(dos, 19879, 0);
+    	
+    	// Write Saved-Version
+    	writeValue(dos, 2, 0);
     	
     	// Save width and height
     	writeValue(dos, Tiles.WIDTH, 0);
     	writeValue(dos, Tiles.HEIGHT, 0);
+    	
+    	// Save theme
+    	writeValue(dos, Tiles.theme, 0);
 
         // Save tile types
     	for (int[] row : Tiles.grid) {
@@ -62,23 +71,8 @@ public class Store {
     		dos.writeInt(count);
     }
     
-	// NEW LEVEL LOAD
-	public static void loadLevel(int num, Player player, ArrayList<PhysicsObject> objects, boolean isBackup) throws IOException {
-		int prevLevel = Tiles.level;
-		Tiles.level = num;
-		
-		if (Tiles.level == 1 || Tiles.level == 2) {
-			Tiles.theme = 1;
-		} else if (Tiles.level == 3) {
-			Tiles.theme = 2;
-		} else {
-			Tiles.theme = 4;
-		}
-		
-		if (prevLevel != Tiles.level) {
-			Music.setMusic(Tiles.theme);
-		}
-		
+	// LEVEL LOAD
+	public static void loadLevel(int num, Player player, ArrayList<PhysicsObject> objects, boolean isBackup) throws IOException {        
 		File level;
 		if (isBackup) {
 			level = new File("level" + num + "backup.bin");
@@ -101,9 +95,100 @@ public class Store {
 		FileInputStream fis;
 		fis = new FileInputStream(level);
 	    DataInputStream dis = new DataInputStream(fis);
+	    
+	    // Check if file contains unique code: 19879
+	    int code = readValue(dis);
+
+	    // Try old level load if missing unique code
+		if (code != 19879) {
+			loadLevelV1(num, player, objects, isBackup, dis, code);
+			return;
+		}
+		
+		// Check version number of file to load
+		if (readValue(dis) == 2) {
+			loadLevelV2(num, player, objects, isBackup, dis);
+		} else {
+			throw new IOException("Invalid file level version!");
+		}
+    }
+	
+	// LEVEL LOAD V0.4.9
+	private static void loadLevelV2(int num, Player player, ArrayList<PhysicsObject> objects, boolean isBackup, DataInputStream dis) throws IOException {
+		int prevLevel = Tiles.level;
+		Tiles.level = num;
     	
     	// Set width and height
     	Tiles.WIDTH = readValue(dis);
+    	Tiles.HEIGHT = readValue(dis);
+    	
+        Tiles.grid = new int[Tiles.WIDTH][Tiles.HEIGHT];
+        
+        Tiles.theme = readValue(dis);
+        
+        if (prevLevel != Tiles.level) {
+			Music.setMusic(Tiles.theme);
+		}
+        
+        // Set tile types
+        int row = 0, col = 0;
+        while (row < Tiles.WIDTH) {
+            int value = dis.readInt();
+            int count = dis.readInt();
+            
+            for (int i = 0; i < count; i++) {
+            	// Place tile
+                Tiles.grid[row][col] = value;
+                
+                // Set Spawn
+    			if (Tiles.grid[row][col] == 9) {
+    	            player.setSpawn(row, col);
+    	            if (!isBackup) {
+        	            player.reset();
+    	            }
+    			}
+    			
+    			col++;
+                if (col == Tiles.HEIGHT) {
+                    col = 0;
+                    row++;
+                }
+            }
+        }
+        
+        // Set objects
+        objects.clear();
+        
+        while (dis.available() > 0) {
+        	int type = dis.read();
+            int tileX = dis.read();
+            int tileY = dis.read();
+            
+            PhysicsObject object = ObjectFactory.createObject(type, tileX, tileY, num + 1);
+        	objects.add(object);
+        }
+	}
+	
+	// LEVEL LOAD V0.4.8
+	private static void loadLevelV1(int num, Player player, ArrayList<PhysicsObject> objects, 
+			boolean isBackup, DataInputStream dis, int value1) throws IOException {
+		int prevLevel = Tiles.level;
+		Tiles.level = num;
+		
+		if (Tiles.level == 3) {
+			Tiles.theme = 2;
+		} else if (Tiles.level == 4) {
+			Tiles.theme = 4;
+		} else {
+			Tiles.theme = 1;
+		}
+		
+		if (prevLevel != Tiles.level) {
+			Music.setMusic(Tiles.theme);
+		}
+    	
+    	// Set width and height
+    	Tiles.WIDTH = value1;
     	Tiles.HEIGHT = readValue(dis);
     	
         Tiles.grid = new int[Tiles.WIDTH][Tiles.HEIGHT];
@@ -144,116 +229,10 @@ public class Store {
             
             PhysicsObject object = ObjectFactory.createObject(type, tileX, tileY, num + 1);
         	objects.add(object);
-        	
         }
-        
-    }
+	}
     
     private static int readValue(DataInputStream dis) throws IOException {
     	return dis.readInt();
     }
-    
-	
-	
-    // OLD LEVEL LOADER
-    /*
-    
-    // Level storage
-	public static String[] levelStore = 
-		{"100.20.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.10.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2.2.2.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.10.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.7.8.0.0.0.0.0.0.0.0.0.9.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.1.1.0.0.0.0.3.4.5.0.0.0.0.7.7.7.7.7.7.7.8.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.1.1.0.0.0.0.0.0.0.0.0.0.3.4.5.0.0.0.0.4.4.4.4.4.4.4.5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.1.1.1.1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.7.7.7.7.7.7.8.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.4.5.0.0.0.0.4.4.4.4.4.4.4.5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.7.7.7.7.7.7.7.7.7.4.4.4.4.4.4.4.5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.4.5.0.0.0.0.4.4.4.4.4.4.4.5.0.0.0.0.0.6.7.7.7.7.7.8.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.4.5.0.0.0.0.4.4.4.4.4.4.4.5.0.0.0.0.0.3.4.4.4.4.4.5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.4.5.0.0.0.0.4.4.4.4.4.4.4.5.0.0.0.0.0.3.4.4.4.4.4.5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.4.5.0.0.0.0.4.4.4.4.4.4.4.5.0.0.0.0.0.3.4.4.4.4.4.5.0.0.0.0.0.0.0.0.0.0.0.6.7.7.7.7.7.7.7.7.7.7.7.7.7.8.0.0.0.6.7.7.7.7.8.0.0.0.3.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.3.4.5.0.0.0.0.4.4.4.4.4.4.4.5.0.0.0.0.0.3.4.4.4.4.4.5.0.0.0.0.0.0.0.0.0.0.0.3.4.4.4.4.4.4.4.4.4.4.4.4.4.5.0.0.0.3.4.4.4.4.5.0.0.0.3.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.5.0.0.0.0.0.0.0.0.0.0.0.2.0.0.0.0.0.3.4.5.0.0.0.0."
-			};
-			
-	private static String encoded;
-	private static String value;
-	private static char piece;
-	private static int readIndex;
-	
-	public static void printGrid() {
-		System.out.print(Tiles.WIDTH + ".");
-		System.out.print(Tiles.HEIGHT + ".");
-		for (int i = 0 ; i < Tiles.HEIGHT ; i++) {
-			for (int j = 0 ; j < Tiles.WIDTH ; j++) {
-				System.out.print(Tiles.grid[j][i] + ".");
-			}
-		}
-		System.out.println();
-	}
-    
-	
-    public static void loadLevelOld(int num) {
-    	encoded = levelStore[num];
-    	
-    	// Decode level
-    	readIndex = 0;
-    	
-    	// Set width and height
-    	readValueOld();
-    	Tiles.WIDTH = Integer.parseInt(value);
-    	readValueOld();
-    	Tiles.HEIGHT = Integer.parseInt(value);
-    	
-        Tiles.grid = new int[Tiles.WIDTH][Tiles.HEIGHT];
-        
-        // Set tile types
-        for (int i = 0 ; i < Tiles.HEIGHT ; i++) {
-        	for (int j = 0 ; j < Tiles.WIDTH ; j++) {
-        		
-        		// Set tile value
-        		readValueOld();
-        		Tiles.grid[j][i] = Integer.parseInt(value);
-        		
-        		// Set Spawn
-				if (Tiles.grid[j][i] == 9) {
-    	            Player.spawnX = j*Tiles.SIZE + Player.spawnXoffset;
-    	            Player.spawnY = i*Tiles.SIZE + Player.spawnYoffset - Player.TINY;
-				}
-        	}
-    	}
-    }
-    
-    private static void readValueOld() {
-    	value = "";
-    	
-    	piece = encoded.charAt(readIndex);
-    	readIndex += 1;
-    	
-    	while (piece != '.') {
-    		value += piece;
-    		piece = encoded.charAt(readIndex);
-        	readIndex += 1;
-    	}
-    }
-    */
-    
-    /*
-    public static void saveLevel() {
-    	encoded = "";
-    	
-    	// Set width and height
-    	writeValue(Integer.toString(Tiles.WIDTH), '.');
-    	writeValue(Integer.toString(Tiles.HEIGHT), '.');
-    	
-        
-        // Set tile types
-        for (int i = 0 ; i < Tiles.HEIGHT ; i++) {
-        	for (int j = 0 ; j < Tiles.WIDTH ; j++) {
-            	writeValue(Integer.toString(Tiles.grid[j][i]), '.');
-        	}
-    	}
-        
-        //Store level
-        System.out.println(encoded);
-    }
-    */
-	
-	
-    /**
-     * @param value
-     * @param piece - Delimiter
-     */
-	/*
-    private static void writeValue(String value, char piece) {
-    	encoded += value + piece;
-    }
-    */
 }
