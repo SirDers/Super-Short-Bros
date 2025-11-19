@@ -35,8 +35,6 @@ public class Main extends Application {
     // TextField for Edit Mode (Not yet used)
     private TextField textField = new TextField();
 
-    int debugCount = 0;
-
     AnimationTimer gameLoop = new AnimationTimer() {
         private long previousTime = 0; // Time passed last frame in nanoseconds
         private double accumulator = 0.0; //
@@ -49,21 +47,18 @@ public class Main extends Application {
                 return;
             }
 
-            double frameTime = (now - previousTime) / 1_000_000_000.0; // time between frames in seconds
+            double frameTime = (now - previousTime) / 1_000_000_000.0; // Time between frames in seconds
             previousTime = now;
-            frameTime = Math.min(frameTime, FIXED_DT); // Clamp frameTime to FixedDeltaTime
+            frameTime = Math.min(frameTime, FIXED_DT);
 
             accumulator += frameTime;
 
-            // Check for input
-            Controls.checkControls();
-
             // Fixed Update (loop for lag spikes)
             if (accumulator >= FIXED_DT) {
-                Controls.checkPressed();
                 savePreviousStates();
                 fixedUpdate();
                 accumulator -= FIXED_DT;
+                Controls.endFrame();
             }
 
             // For interpolation in rendering
@@ -159,6 +154,7 @@ public class Main extends Application {
 
     private void fixedUpdate() {
         Editor.keyCheck(gc, player, objects);
+        Tiles.editor(gc, textField, player, objects);
     	if (!player.isDead()) {
             // Update objects
             player.fixedUpdate(objects);
@@ -203,6 +199,7 @@ public class Main extends Application {
         gc.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         
         Tiles.render(gc, textField, player, objects, camera.getX(), camera.getY(), TILE_COUNT_X, TILE_COUNT_Y);
+        Tiles.renderEdit(gc, player);
         
         // Draw objects
         for (PhysicsObject object : objects) {

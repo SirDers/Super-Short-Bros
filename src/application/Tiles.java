@@ -16,6 +16,7 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -29,10 +30,14 @@ public class Tiles {
     public static int[][] grid;
     
     public static int theme;
-    
+
     // Edit tile type
     private static int brush = 1;
     private static int editSet = 0;
+
+    // Edit tile position
+    private static double drawEditTileX = 0;
+    private static double drawEditTileY = 0;
     
     // Edit group
     private static int[][] tileKeyMap = {
@@ -161,8 +166,32 @@ public class Tiles {
                 
             }
         }
-        
-        editor(gc, tf, player, objects);
+    }
+
+    public static void renderEdit(GraphicsContext gc, Player player) {
+        if (!Editor.editMode) return;
+
+        drawTile(gc, player, brush, drawEditTileX, drawEditTileY, true);
+
+        drawEditBox(gc, 16, 8, 0); // Edit Mode
+        switch (editSet) {
+            case 1:
+                drawEditBox(gc, 1, 0, 30); // Plain Orange tiles
+                break;
+            default: // 0
+                drawEditBox(gc, 0, 0, 1); // Plain tiles
+                drawEditBox(gc, 1, 0, 6); // Grass tiles
+                drawEditBox(gc, 2, 0, 9); // Spawn tile
+                drawEditBox(gc, 3, 0, 10); // Stella
+                drawEditBox(gc, 4, 0, 11); // Asteos
+                drawEditBox(gc, 5, 0, 15); // Soliseye
+                drawEditBox(gc, 6, 0, 16); // Future tiles
+                drawEditBox(gc, 7, 0, 25); // Spike tiles
+                break;
+        }
+
+        drawEditBox(gc, 8, 0, 39); // Edit Set
+        drawEditBox(gc, 0, 1, 0); // Eraser
     }
     
     private static void drawTile(GraphicsContext gc, Player player, int index, double drawX, double drawY, boolean isEdit) {
@@ -175,7 +204,7 @@ public class Tiles {
     		gc.drawImage(tileImage[index], drawX, drawY, SIZE, SIZE);
     }
 
-    private static void editor(GraphicsContext gc, TextField tf, Player player, ArrayList<PhysicsObject> objects) {
+    public static void editor(GraphicsContext gc, TextField tf, Player player, ArrayList<PhysicsObject> objects) {
     	if (Editor.editMode) {
             getBrush();
     		
@@ -185,42 +214,18 @@ public class Tiles {
         	// Editing Tile:
         	double offsetX = Camera.x % SIZE;
         	double offsetY = Camera.y % SIZE;
-        	double drawX = (int) ((Mouse.x + offsetX) / SIZE) * SIZE - offsetX;
-            double drawY = (int) ((Mouse.y + offsetY) / SIZE) * SIZE - offsetY;
-
-        	drawTile(gc, player, brush, drawX, drawY, true);
-        	
-        	// Edit Mode graphic:
-    		drawEditBox(gc, 16, 8, 0); // Edit Mode
-        	switch (editSet) {
-        	case 1:
-            	drawEditBox(gc, 1, 0, 30); // Plain Orange tiles
-        		break;
-        	default: // 0
-            	drawEditBox(gc, 0, 0, 1); // Plain tiles
-            	drawEditBox(gc, 1, 0, 6); // Grass tiles
-            	drawEditBox(gc, 2, 0, 9); // Spawn tile
-            	drawEditBox(gc, 3, 0, 10); // Stella
-            	drawEditBox(gc, 4, 0, 11); // Asteos
-            	drawEditBox(gc, 5, 0, 15); // Soliseye
-            	drawEditBox(gc, 6, 0, 16); // Future tiles
-            	drawEditBox(gc, 7, 0, 25); // Spike tiles
-        		break;	
-        	}
-
-        	drawEditBox(gc, 8, 0, 39); // Edit Set
-        	drawEditBox(gc, 0, 1, 0); // Eraser
-        	
+        	drawEditTileX = (int) ((Mouse.x + offsetX) / SIZE) * SIZE - offsetX;
+            drawEditTileY = (int) ((Mouse.y + offsetY) / SIZE) * SIZE - offsetY;
         	
         	// Edit level:
         	if (Mouse.isDown) {
-        		editLevel(gc, tf, objects, player, tileX, tileY);
+        		editLevel(objects, player, tileX, tileY);
         		Editor.setChanged(true);
         	}
         }
     }
     
-    private static void editLevel(GraphicsContext gc, TextField tf, ArrayList<PhysicsObject> objects, Player player, int tileX, int tileY) {
+    private static void editLevel(ArrayList<PhysicsObject> objects, Player player, int tileX, int tileY) {
     	
     	if (brush == 10 || brush == 11 || brush == 13 || brush == 14 || brush == 15)  {
 			// Places objects
@@ -251,8 +256,6 @@ public class Tiles {
 			for (PhysicsObject object : objects) {
 				if (tileX == object.tileX && tileY == object.tileY) {
 					// Change object property
-					object.property = getProperty(gc, tf);
-					
 				}
 			}
 		} else if (brush == 15) {
@@ -272,35 +275,35 @@ public class Tiles {
     }
     
     private static void getBrush() {
-    	if (Controls.key1pressed) {
+    	if (Controls.isPressed(KeyCode.DIGIT1)) {
     		nextBrush(1);
     	}
-    	if (Controls.key2pressed) {
+    	if (Controls.isPressed(KeyCode.DIGIT2)) {
     		nextBrush(2);
     	}
-    	if (Controls.key3pressed) {
+    	if (Controls.isPressed(KeyCode.DIGIT3)) {
     		nextBrush(3);
     	}
-    	if (Controls.key4pressed) {
+    	if (Controls.isPressed(KeyCode.DIGIT4)) {
     		nextBrush(4);
     	}
-    	if (Controls.key5pressed) {
+    	if (Controls.isPressed(KeyCode.DIGIT5)) {
     		nextBrush(5);
     	}
-    	if (Controls.key6pressed) {
+    	if (Controls.isPressed(KeyCode.DIGIT6)) {
     		nextBrush(6);
     	}
-    	if (Controls.key7pressed) {
+    	if (Controls.isPressed(KeyCode.DIGIT7)) {
     		nextBrush(7);
     	}
-    	if (Controls.key8pressed) {
+    	if (Controls.isPressed(KeyCode.DIGIT8)) {
     		nextBrush(8);
     	}
-    	if (Controls.key9pressed) {
+    	if (Controls.isPressed(KeyCode.DIGIT9)) {
     		nextEditSet(9);
     	}
     	
-    	if (Controls.keyQpressed) {
+    	if (Controls.isPressed(KeyCode.Q)) {
     		if (brush == 0)
     			brush = 12;
     		else
@@ -343,11 +346,6 @@ public class Tiles {
 		} else if (editSet == 1) {
 			brush = 29;
 		}
-    }
-    
-    private static int getProperty(GraphicsContext gc, TextField tf) {
-        tf.setVisible(true);
-    	return 1;
     }
     
     private static void drawEditBox(GraphicsContext gc, int col, int row, int tile) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 //import javafx.scene.shape.Rectangle;
 
@@ -112,9 +113,9 @@ public class Player extends PhysicsObject {
     		return;
     	}
     	
-    	if (Controls.xAxis == 1)
+    	if (Controls.xAxis() == 1)
             isFacingRight = true;
-        else if (Controls.xAxis == -1)
+        else if (Controls.xAxis() == -1)
         	isFacingRight = false;
 		
     	
@@ -297,32 +298,32 @@ public class Player extends PhysicsObject {
     protected void speedX() {
         action = "walk";
         
-    	if (Controls.run)
+    	if (Controls.run())
     		curMaxSpeed = maxSpeedX;
     	else 
     		curMaxSpeed = maxSpeedX * 0.4;
     	
     	// When left or right isn't pressed
-    	if (Controls.xAxis == 0) {
+    	if (Controls.xAxis() == 0) {
     		decelerateX();
     	}
     	// When left or right is pressed
     	else {
-    		if (Controls.xAxis * speedX < curMaxSpeed) {
-    			if (Controls.xAxis * speedX < 0) {
+    		if (Controls.xAxis() * speedX < curMaxSpeed) {
+    			if (Controls.xAxis() * speedX < 0) {
         			//Turning
-        			speedX += accelX * 3 * Controls.xAxis;
+        			speedX += accelX * 3 * Controls.xAxis();
         			action = "turn";
         		}
         		else {
-        			speedX += accelX * Controls.xAxis;
+        			speedX += accelX * Controls.xAxis();
         		}
         	}
         	else {
         		if (curMaxSpeed < maxSpeedX)
         			decelerateX();
         		else {
-        			speedX = curMaxSpeed * Controls.xAxis;
+        			speedX = curMaxSpeed * Controls.xAxis();
         			action = "run";
         		}
         	}
@@ -340,7 +341,7 @@ public class Player extends PhysicsObject {
         super.speedY();
         
         // Jumping
-    	if (Controls.jump) {
+    	if (Controls.jump()) {
     		if (jumpFrame <= FRAMES_BEFORE_JUMP) {
         		isJumping = true;
     		}
@@ -377,12 +378,12 @@ public class Player extends PhysicsObject {
     // Special Ability
     protected void specialMove() {
     	if (abCoolDown <= 0) {
-    		if (Controls.keyLpressed) {
+    		if (Controls.isPressed(KeyCode.L)) {
     			abCoolDown = 10;
     			speedX = 0;
     			speedY = 0;
-    			specialDirX = Controls.xAxis;
-    			specialDirY = Controls.yAxis;
+    			specialDirX = Controls.xAxis();
+    			specialDirY = Controls.yAxis();
     		}
     		return;
     	}
@@ -449,8 +450,8 @@ public class Player extends PhysicsObject {
     }
     
     private void moveEditMode() {
-    	speedX = 7 * (Controls.run ? 3 : 1) * Controls.xAxis;
-    	speedY = 7 * (Controls.run ? 3 : 1) * Controls.yAxis;
+    	speedX = 7 * (Controls.run() ? 3 : 1) * Controls.xAxis();
+    	speedY = 7 * (Controls.run() ? 3 : 1) * Controls.yAxis();
     	x += speedX;
     	y += speedY;
     	

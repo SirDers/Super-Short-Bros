@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -22,7 +23,7 @@ public class Editor {
 	
 	public static void keyCheck(GraphicsContext gc, Player player, ArrayList<PhysicsObject> objects) {
 		
-		if (Controls.keyMINpressed) {
+		if (Controls.isPressed(KeyCode.MINUS)) {
 			devMode = !devMode;
 		}
 		
@@ -52,7 +53,7 @@ public class Editor {
 		}
 		
 		// Toggle edit mode
-    	if (Controls.key0pressed) {
+    	if (Controls.isPressed(KeyCode.DIGIT0)) {
         	editMode = !editMode;
         	if (editMode) {
             	try {
@@ -73,7 +74,7 @@ public class Editor {
 		
     	if (editMode) {
     		// P: Saves level
-    		if (Controls.keyPpressed) {
+    		if (Controls.isPressed(KeyCode.P)) {
             	try {
 					Store.saveLevel(Tiles.level, objects, false);
     				notif = "Saved level " + Tiles.level + "!";
@@ -84,7 +85,7 @@ public class Editor {
         	}
     		
     		// T: Changes theme
-    		if (Controls.keyTpressed) {
+    		if (Controls.isPressed(KeyCode.T)) {
     			if (Tiles.theme < 4)
     				Tiles.theme += 1;
     			else {
@@ -94,22 +95,22 @@ public class Editor {
         	}
     		
     		// Change Width and Height with arrows
-    		if (Controls.keyLEFTpressed) {
+    		if (Controls.isPressed(KeyCode.LEFT)) {
     			Tiles.WIDTH--;
     			recreateGrid("LEFT");
         	}
-    		if (Controls.keyUPpressed) {
+    		if (Controls.isPressed(KeyCode.UP)) {
     			Tiles.HEIGHT++;
     			recreateGrid("UP");
     			for (PhysicsObject object : objects) {
     				object.setSpawn(object.tileX, object.tileY + 1);
     			}
         	}
-    		if (Controls.keyRIGHTpressed) {
+    		if (Controls.isPressed(KeyCode.RIGHT)) {
     			Tiles.WIDTH++;
     			recreateGrid("RIGHT");
         	}
-    		if (Controls.keyDOWNpressed && Tiles.HEIGHT > 20) {
+    		if (Controls.isPressed(KeyCode.DOWN) && Tiles.HEIGHT > 20) {
     			Tiles.HEIGHT--;
     			recreateGrid("DOWN");
     			for (PhysicsObject object : objects) {
