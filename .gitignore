@@ -9,7 +9,7 @@
 
 # Folders
 *bin
-.classes/
+classes/
 
 # IDE setups
 .project
