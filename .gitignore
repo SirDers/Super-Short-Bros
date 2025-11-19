@@ -8,8 +8,8 @@
 *.ctxt
 
 # Folders
-*bin
-.classes/
+bin/
+classes/
 
 # IDE setups
 .project
@@ -17,6 +17,9 @@
 .settings/
 *.iml
 .idea/
+
+# JavaFX setup
+build.fxbuild
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
