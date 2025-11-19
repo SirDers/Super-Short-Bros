@@ -37,7 +37,7 @@ public class Asteo extends Enemy {
 	}
 	
 	@Override
-	public void draw(GraphicsContext gc, double cameraX, double cameraY) {
+	public void draw(GraphicsContext gc, double cameraX, double cameraY, double alpha) {
 		if (isDead) {
 			double drawX = x - width/2 - cameraX;
 	        double drawY = y - height/2 - cameraY;
@@ -49,7 +49,7 @@ public class Asteo extends Enemy {
 	    	} catch (Exception e) {
 	        }
 		} else {
-			super.draw(gc, cameraX, cameraY);
+			super.draw(gc, cameraX, cameraY, alpha);
 		}
 	}
 }

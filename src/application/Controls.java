@@ -113,14 +113,15 @@ public class Controls {
 		keyDOWN = pressedKeys.contains(KeyCode.DOWN);
 
 		keyMIN = pressedKeys.contains(KeyCode.MINUS);
-		
+	}
 
+	public static void checkPressed() {
 		keyPpressed = pressed(keyP, 14);
 		keyQpressed = pressed(keyQ, 15);
 		keyTpressed = pressed(keyT, 16);
 		keyVpressed = pressed(keyV, 17);
 		keyLpressed = pressed(keyL, 18);
-		
+
 		key0pressed = pressed(key0, 0);
 		key1pressed = pressed(key1, 1);
 		key2pressed = pressed(key2, 2);
@@ -139,15 +140,13 @@ public class Controls {
 
 		keyMINpressed = pressed(keyMIN, 35);
 	}
-	
+
 	public static void keyPressed(KeyCode key) {
         pressedKeys.add(key);
-        //checkControls();
     }
 	
 	public static void keyReleased(KeyCode key) {
         pressedKeys.remove(key);
-        //checkControls();
     }
 	
 	public static void setup(Scene scene) {
@@ -156,17 +155,15 @@ public class Controls {
 	}
 	
 	private static boolean pressed(boolean key, int keyNum) {
-		if (key) {
-			if (!beingPressed[keyNum]) {
-				beingPressed[keyNum] = true;
-				return true;
-			} else {
-				return false;
-			}
-		} else {
+		if (!key) {
 			beingPressed[keyNum] = false;
 			return false;
 		}
+		if (!beingPressed[keyNum]) {
+			beingPressed[keyNum] = true;
+			return true;
+		}
+		return false;
 	}
 }
 

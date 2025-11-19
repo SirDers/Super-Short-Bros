@@ -18,11 +18,11 @@ public abstract class Enemy extends PhysicsObject {
 	}
 	
 	@Override
-	public void update(ArrayList<PhysicsObject> objects) {
+	public void fixedUpdate(ArrayList<PhysicsObject> objects) {
 		if (isDead) {
 			deathFrames += 1;
 		} else {
-			super.update(objects);
+			super.fixedUpdate(objects);
 		}
 	}
 	

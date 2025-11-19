@@ -1,10 +1,3 @@
-/*
-VERSION 0.4.8
-- Level 5
-- Better organized Player draw() and animate() scriptsdw
-	
-*/
-
 package application;
 
 import java.io.IOException;import java.awt.Dimension;
@@ -41,15 +34,47 @@ public class Main extends Application {
 
     // TextField for Edit Mode (Not yet used)
     private TextField textField = new TextField();
-    
+
+    int debugCount = 0;
+
     AnimationTimer gameLoop = new AnimationTimer() {
+        private long previousTime = 0; // Time passed last frame in nanoseconds
+        private double accumulator = 0.0; //
+        private static final double FIXED_DT = 1.0 / 60.0; // Logic update every second
+
         @Override
         public void handle(long now) {
-            update();
-            render();
+            if (previousTime == 0) {
+                previousTime = now;
+                return;
+            }
+
+            double frameTime = (now - previousTime) / 1_000_000_000.0; // time between frames in seconds
+            previousTime = now;
+            frameTime = Math.min(frameTime, FIXED_DT); // Clamp frameTime to FixedDeltaTime
+
+            accumulator += frameTime;
+
+            // Check for input
+            Controls.checkControls();
+
+            // Fixed Update (loop for lag spikes)
+            if (accumulator >= FIXED_DT) {
+                Controls.checkPressed();
+                savePreviousStates();
+                fixedUpdate();
+                accumulator -= FIXED_DT;
+            }
+
+            // For interpolation in rendering
+            double alpha = accumulator / FIXED_DT;
+            alpha = Math.min(alpha, 1.0);
+
+            // Update (every frame)
+            update(alpha);
         }
     };
-    
+
     @Override
     public void start(Stage stage) {
     	// Get computer screen resolution
@@ -58,14 +83,8 @@ public class Main extends Application {
         CANVAS_WIDTH = (int) screenSize.getWidth();
         CANVAS_HEIGHT = (int) screenSize.getHeight();
         
-
-        //CANVAS_WIDTH /= 2;
-        //CANVAS_HEIGHT /= 2;
-        
         // Always have 21 tiles visible vertically
-        // Wider screen = more horizontal tiles visible
         TILE_COUNT_X = TILE_COUNT_Y * CANVAS_WIDTH / CANVAS_HEIGHT;
-        
 
         // Set tile size relative to resolution
     	Tiles.SIZE = (int) (CANVAS_HEIGHT / (TILE_COUNT_Y - 1));
@@ -85,8 +104,6 @@ public class Main extends Application {
         backdrop = new Backdrop();
         layer0 = new Backdrop();
         layer1 = new Backdrop();
-
-        
 
         // Setup textField
         textField.setPromptText("Enter text here");
@@ -125,7 +142,7 @@ public class Main extends Application {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        
+
         // Initialize Music after stage
         Music.setup(stage);
         
@@ -133,18 +150,23 @@ public class Main extends Application {
         gameLoop.start();
     }
 
-    private void update() {
-		Controls.checkControls();
+    private void savePreviousStates() {
+        player.savePreviousState();
+        for (PhysicsObject object : objects) {
+            object.savePreviousState();
+        }
+    }
+
+    private void fixedUpdate() {
         Editor.keyCheck(gc, player, objects);
     	if (!player.isDead()) {
-            
             // Update objects
-            player.update(objects);
+            player.fixedUpdate(objects);
             for (PhysicsObject object : objects) {
-                object.update(objects);
+                object.fixedUpdate(objects);
             }
             
-            // Check object collision
+            // Resolve physics
             if (!Editor.editMode) {
             	toRemove.clear();
             	player.sensor(objects, toRemove);
@@ -153,13 +175,17 @@ public class Main extends Application {
             	}
             	objects.removeAll(toRemove);
             }
-            camera.update(player);
     	} else {
     		player.playDead(objects);
     	}
     }
 
-    private void render() {
+    private void update(double alpha) {
+        if (!player.isDead()) camera.update(player, alpha);
+        render(alpha);
+    }
+
+    private void render(double alpha) {
     	gc.setFill(Color.rgb(100, 200, 250));
         gc.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         
@@ -180,9 +206,9 @@ public class Main extends Application {
         
         // Draw objects
         for (PhysicsObject object : objects) {
-            object.draw(gc, camera.getX(), camera.getY());
+            object.draw(gc, camera.getX(), camera.getY(), alpha);
         }
-        player.draw(gc, camera.getX(), camera.getY());
+        player.draw(gc, camera.getX(), camera.getY(), alpha);
         
         Editor.render(gc);
     }

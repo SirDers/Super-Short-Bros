@@ -50,17 +50,7 @@ public class Player extends PhysicsObject {
     private Image bishop = new Image("file:resources/images/bishop.png");
     private Image rook = new Image("file:resources/images/rook.png");
     private Image queen = new Image("file:resources/images/queen.png");
-    
-    
-    /**
-     * @param spawnX - set x position
-     * @param spawnY - set y position
-     */
-    /*
-    public Player(int tileX, int tileY) {
-    	super(tileX, tileY);
-    }
-    */
+
     public Player(int tileX, int tileY, double WIDTH, double HEIGHT, double ACCELERATION_X, double ACCELERATION_Y, double MAX_SPEED_X, double MAX_SPEED_Y) {
     	super(tileX, tileY, WIDTH, HEIGHT, ACCELERATION_X, ACCELERATION_Y, MAX_SPEED_X, MAX_SPEED_Y);
 	}
@@ -81,13 +71,15 @@ public class Player extends PhysicsObject {
     	
     	double spawnYoffset = height/2 - Tiles.SIZE;
     	this.spawnY = tileY*Tiles.SIZE - spawnYoffset - Player.TINY;
-    	this.prevY = this.spawnY;
     }
-    
+
     @Override
-    protected void draw(GraphicsContext gc, double cameraX, double cameraY) {
-    	double drawX = x - width/2 - cameraX;
-        double drawY = y - height/2 - cameraY;
+    protected void draw(GraphicsContext gc, double cameraX, double cameraY, double alpha) {
+		double renderX = prevX * (1 - alpha) + x * alpha;
+		double renderY = prevY * (1 - alpha) + y * alpha;
+
+		double drawX = renderX - width/2 - cameraX;
+		double drawY = renderY - height/2 - cameraY;
 
     	double sizeFactor = Tiles.SIZE*2.5;
         double spritePosX = sizeFactor*(0.375 - 1.25)/2.5;
@@ -121,20 +113,16 @@ public class Player extends PhysicsObject {
     	}
     	
     	if (Controls.xAxis == 1)
-            leftright = true;
+            isFacingRight = true;
         else if (Controls.xAxis == -1)
-        	leftright = false;
+        	isFacingRight = false;
 		
     	
-        if (leftright) {
+        if (isFacingRight) {
         	animate(gc, 4, 1, drawX, drawY, 1);
         } else {
         	animate(gc, 4, 1, drawX, drawY, -1);
         }
-        
-
-        //gc.drawImage(walk1, drawX + spritePosX, drawY - spritePosY, 1*sizeFactor, sizeFactor);
-        
     }
     
     @Override
@@ -229,7 +217,7 @@ public class Player extends PhysicsObject {
     }
 
 	@Override
-    public void update(ArrayList<PhysicsObject> objects) {
+    public void fixedUpdate(ArrayList<PhysicsObject> objects) {
     	if (Editor.editMode) {
         	moveEditMode();
     	}
@@ -267,7 +255,7 @@ public class Player extends PhysicsObject {
 	
 	public void playDead(ArrayList<PhysicsObject> objects) {
 		if (deadFrames == 0) speedY = -accelY*1.5;
-		
+
 		deadFrames += 1;
 		if (!Editor.isDevMode()) {
 			if (deadFrames >= 180) {
@@ -405,7 +393,7 @@ public class Player extends PhysicsObject {
     	}
     	if (piece == "bishop") {
     		if (specialDirX == 0)
-    			specialDirX = leftright ? 1 : -1;
+    			specialDirX = isFacingRight ? 1 : -1;
     		if (specialDirY == 0)
     			specialDirY = -1;
     		speedX = specialDirX * 2 * maxSpeedX;
@@ -433,7 +421,6 @@ public class Player extends PhysicsObject {
     @Override
     protected void death(ArrayList<PhysicsObject> objects, ArrayList<PhysicsObject> toRemove) {
     	if (y > (Tiles.HEIGHT + 2)*Tiles.SIZE) {
-    		//reset();
     		dead = true;
     	} else {
     		speedY = -20;
@@ -495,7 +482,7 @@ public class Player extends PhysicsObject {
     }
     
     @Override
-    protected void onObjCollision(ArrayList<PhysicsObject> objects, ArrayList<PhysicsObject> toRemove, PhysicsObject object, double overlapBottom, double overlapTop, double overlapRight, double overlapLeft) {
+    protected void resolveCollision(ArrayList<PhysicsObject> objects, ArrayList<PhysicsObject> toRemove, PhysicsObject object, double overlapBottom, double overlapTop, double overlapRight, double overlapLeft) {
     	collided = true;
     	if (object.stompable) {
     		if (speedY > 0) {

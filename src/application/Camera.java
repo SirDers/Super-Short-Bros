@@ -11,14 +11,18 @@ public class Camera {
         this.viewportHeight = viewportHeight;
     }
 
-    public void update(Player player) {
-        x = player.getX() - player.width - viewportWidth / 2;
-        y += (player.getY() - viewportHeight / 2 - y) / 2;
-        //x = (x + Tiles.WIDTH * Tiles.SIZE) % (Tiles.WIDTH * Tiles.SIZE);
-        //y = (y + Tiles.HEIGHT * Tiles.SIZE) % (Tiles.HEIGHT * Tiles.SIZE);
-        
+    public void update(Player player, double alpha) {
+        // Interpolate camera position between player's previous and current positions
+        double playerX = player.prevX * (1 - alpha) + player.x * alpha;
+        double playerY = player.prevY * (1 - alpha) + player.y * alpha;
+
+        // Apply your camera offset / smoothing
+        x = playerX - player.width - viewportWidth / 2;
+        y += (playerY - viewportHeight / 2 - y) / 2;
+
         cameraEdge(0, 0);
     }
+
 
     public double getX() {
         return x;

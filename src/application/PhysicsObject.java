@@ -43,7 +43,7 @@ public abstract class PhysicsObject {
     
     // Animation
     protected String action = "walk";
-    protected boolean leftright = true;
+    protected boolean isFacingRight = true;
     protected double spriteFrame = 0;
     protected double frameSpeed = 0.2;
     
@@ -113,8 +113,6 @@ public abstract class PhysicsObject {
     	this.tileY = tileY;
     	this.spawnX = tileX*Tiles.SIZE + spawnXoffset;
     	this.spawnY = tileY*Tiles.SIZE + spawnYoffset - TINY;
-    	this.prevX = this.spawnX;
-    	this.prevY = this.spawnY;
     }
     
     protected void setSize(double WIDTH, double HEIGHT) {
@@ -142,7 +140,7 @@ public abstract class PhysicsObject {
     
     public abstract int getType();
     
-	public void update(ArrayList<PhysicsObject> objects) {
+	public void fixedUpdate(ArrayList<PhysicsObject> objects) {
 		// Spawn object when it's in spawnBounds
 		boolean xSpawnBounds = (x - width/2 > Camera.x + Tiles.SIZE*2 + Main.CANVAS_WIDTH) || (x + width/2 < Camera.x);
 		boolean ySpawnBounds = (y - height/2 > Camera.y + Tiles.SIZE*2 + Main.CANVAS_HEIGHT) || (y + height/2 < Camera.y);
@@ -151,6 +149,7 @@ public abstract class PhysicsObject {
 		if (!spawned && outOfSpawnBounds && this.getType() != 0) {
 			x = spawnX;
 			y = spawnY;
+			savePreviousState();
 			return;
 		}
 		spawned = true;
@@ -170,7 +169,7 @@ public abstract class PhysicsObject {
 			reset();
 			return;
 		}
-		
+
 		speedX();
         speedY();
         
@@ -179,7 +178,6 @@ public abstract class PhysicsObject {
 	}
 	
     // Physics:
-    
 	protected void speedX() {
 		// Do nothing
 	}
@@ -282,13 +280,11 @@ public abstract class PhysicsObject {
     	}
     	
     	// Check for collisions with other objects
-    	objCollision(objects, toRemove);
+    	checkCollision(objects, toRemove);
     }
     
-    protected void objCollision(ArrayList<PhysicsObject> objects, ArrayList<PhysicsObject> toRemove) {
+    protected void checkCollision(ArrayList<PhysicsObject> objects, ArrayList<PhysicsObject> toRemove) {
     	for (PhysicsObject object : objects) {
-    		prevX = x;
-    		prevY = y;
     		if (this == object || object.collisionOn == false || collisionOn == false) continue;
     		
     	    double meRight = x + width / 2;
@@ -311,14 +307,14 @@ public abstract class PhysicsObject {
     	        double overlapRight = meRight - objLeft; // Overlap from left of the object
     	        double overlapLeft = objRight - meLeft;  // Overlap from right of the object
 
-    	        onObjCollision(objects, toRemove, object, overlapBottom, overlapTop, overlapRight, overlapLeft);
+    	        resolveCollision(objects, toRemove, object, overlapBottom, overlapTop, overlapRight, overlapLeft);
     	        if (collided) break;
     	    }
 
     	}
     }
     
-    protected void onObjCollision(ArrayList<PhysicsObject> objects, ArrayList<PhysicsObject> toRemove, PhysicsObject object, double overlapBottom, double overlapTop, double overlapRight, double overlapLeft) {
+    protected void resolveCollision(ArrayList<PhysicsObject> objects, ArrayList<PhysicsObject> toRemove, PhysicsObject object, double overlapBottom, double overlapTop, double overlapRight, double overlapLeft) {
     	if (overlapBottom < overlapTop && overlapBottom < overlapRight && overlapBottom < overlapLeft) {
             // Collision on the bottom
             y -= overlapBottom;
@@ -356,6 +352,7 @@ public abstract class PhysicsObject {
     protected void reset() {
     	x = spawnX;
         y = spawnY;
+		savePreviousState();
         speedX = 0;
         speedY = 0;
         curMaxSpeed = maxSpeedX;
@@ -363,23 +360,30 @@ public abstract class PhysicsObject {
         speedXOnGround = 0;
         hardness = 0;
         action = "walk";
-        leftright = true;
+        isFacingRight = true;
         spriteFrame = 0;
         frameSpeed = 0.2;
         frames = 0;
     }
-    
+
+	// Save previous states
+	protected void savePreviousState() {
+		prevX = x;
+		prevY = y;
+	}
+
     
     // Visuals:
-    
-    protected void draw(GraphicsContext gc, double cameraX, double cameraY) {
-    	
-    	double drawX = x - width/2 - cameraX;
-        double drawY = y - height/2 - cameraY;
+    protected void draw(GraphicsContext gc, double cameraX, double cameraY, double alpha) {
+		double renderX = prevX * (1 - alpha) + x * alpha;
+		double renderY = prevY * (1 - alpha) + y * alpha;
+
+		double drawX = renderX - width/2 - cameraX;
+        double drawY = renderY - height/2 - cameraY;
         int frameCount = 4;
 
         // Animation
-        if (leftright) {
+        if (isFacingRight) {
         	animate(gc, frameCount, width, drawX, drawY, 1);
         } else {
         	animate(gc, frameCount, width, drawX, drawY, -1);

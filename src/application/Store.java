@@ -113,7 +113,7 @@ public class Store {
 		}
     }
 	
-	// LEVEL LOAD V0.4.9
+	// LEVEL LOAD V0.4.9+
 	private static void loadLevelV2(int num, Player player, ArrayList<PhysicsObject> objects, boolean isBackup, DataInputStream dis) throws IOException {
 		int prevLevel = Tiles.level;
 		Tiles.level = num;
