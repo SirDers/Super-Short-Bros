@@ -1,4 +1,4 @@
-package application;
+package game;
 
 public class Camera {
     public static double x;

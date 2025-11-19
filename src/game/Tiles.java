@@ -1,3 +1,5 @@
+package game;
+
 /*
  * Tile Types:
  * 0: Air
@@ -7,8 +9,6 @@
  * 10: Stella
  * 11: Asteo
  * */
-
-package application;
 
 import java.util.ArrayList;
 

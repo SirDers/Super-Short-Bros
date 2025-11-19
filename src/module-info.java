@@ -4,5 +4,5 @@ module JavaFXProject {
 	requires javafx.graphics;
 	requires javafx.media;
 	
-	opens application to javafx.graphics, javafx.fxml;
+	opens game to javafx.graphics, javafx.fxml;
 }

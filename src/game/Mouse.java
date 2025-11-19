@@ -1,4 +1,4 @@
-package application;
+package game;
 
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;

@@ -1,4 +1,4 @@
-package application;
+package game;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class Player extends PhysicsObject {
     	super.setSpawn(tileX, tileY);
     	
     	double spawnYoffset = height/2 - Tiles.SIZE;
-    	this.spawnY = tileY*Tiles.SIZE - spawnYoffset - Player.TINY;
+    	this.spawnY = tileY*Tiles.SIZE - spawnYoffset - TINY;
     }
 
     @Override

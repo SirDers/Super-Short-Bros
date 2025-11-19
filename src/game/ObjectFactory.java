@@ -1,4 +1,4 @@
-package application;
+package game;
 
 public class ObjectFactory {
     public static PhysicsObject createObject(int type, int spawnX, int spawnY, int level) {

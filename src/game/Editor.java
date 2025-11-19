@@ -1,4 +1,4 @@
-package application;
+package game;
 
 import java.awt.TextField;
 import java.io.IOException;
