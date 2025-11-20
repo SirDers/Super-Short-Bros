@@ -52,7 +52,11 @@ public class Player extends PhysicsObject {
     private Image rook = new Image("file:resources/images/rook.png");
     private Image queen = new Image("file:resources/images/queen.png");
 
-    public Player(int tileX, int tileY, double WIDTH, double HEIGHT, double ACCELERATION_X, double ACCELERATION_Y, double MAX_SPEED_X, double MAX_SPEED_Y) {
+	// Setup camera
+	private Camera camera;
+
+    public Player(int tileX, int tileY, double WIDTH, double HEIGHT, double ACCELERATION_X, double ACCELERATION_Y,
+				  double MAX_SPEED_X, double MAX_SPEED_Y) {
     	super(tileX, tileY, WIDTH, HEIGHT, ACCELERATION_X, ACCELERATION_Y, MAX_SPEED_X, MAX_SPEED_Y);
 	}
 
@@ -65,6 +69,10 @@ public class Player extends PhysicsObject {
     protected void loadImages() {
     	
     }
+
+	public void start(Camera camera) {
+		this.camera = camera;
+	}
     
     @Override
     public void setSpawn(int tileX, int tileY) {
@@ -443,9 +451,10 @@ public class Player extends PhysicsObject {
     		}
 		}
     }
-    
+
     protected void reset() {
     	super.reset();
+		if (camera != null) camera.reset(this);
         jumping = 0;
     }
     

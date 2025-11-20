@@ -47,11 +47,11 @@ public class Main extends Application {
                 return;
             }
 
-            double frameTime = (now - previousTime) / 1_000_000_000.0; // Time between frames in seconds
+            double deltaTime = (now - previousTime) / 1_000_000_000.0; // Time between frames in seconds
             previousTime = now;
-            frameTime = Math.min(frameTime, FIXED_DT);
+            deltaTime = Math.min(deltaTime, FIXED_DT);
 
-            accumulator += frameTime;
+            accumulator += deltaTime;
 
             // Fixed Update (loop for lag spikes)
             if (accumulator >= FIXED_DT) {
@@ -66,7 +66,7 @@ public class Main extends Application {
             alpha = Math.min(alpha, 1.0);
 
             // Update (every frame)
-            update(alpha);
+            update(alpha, deltaTime);
         }
     };
 
@@ -128,6 +128,9 @@ public class Main extends Application {
         // Handle input
         Controls.setup(scene);
         Mouse.setup(scene);
+
+        // Setup objects before level load
+        player.start(camera);
         
         // Set and load level
         Tiles.level = 1;
@@ -140,6 +143,7 @@ public class Main extends Application {
 
         // Initialize Music after stage
         Music.setup(stage);
+
         
         // Start game loop
         gameLoop.start();
@@ -176,8 +180,8 @@ public class Main extends Application {
     	}
     }
 
-    private void update(double alpha) {
-        if (!player.isDead()) camera.update(player, alpha);
+    private void update(double alpha, double dt) {
+        if (!player.isDead()) camera.update(player, alpha, dt);
         render(alpha);
     }
 

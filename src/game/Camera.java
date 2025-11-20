@@ -11,18 +11,30 @@ public class Camera {
         this.viewportHeight = viewportHeight;
     }
 
-    public void update(Player player, double alpha) {
-        // Interpolate camera position between player's previous and current positions
+    public void update(Player player, double alpha, double dt) {
+        // Interpolate camera between player positions
         double playerX = player.prevX * (1 - alpha) + player.x * alpha;
         double playerY = player.prevY * (1 - alpha) + player.y * alpha;
 
-        // Apply your camera offset / smoothing
-        x = playerX - player.width - viewportWidth / 2;
-        y += (playerY - viewportHeight / 2 - y) / 2;
+        // Center of player x and center of viewportHeight
+        double targetX = playerX - player.width - viewportWidth / 2;
+        double targetY = playerY - viewportHeight / 2;
+
+        // Camera smoothing
+        double smoothSpeed = 12.0;
+        double t = 1 - Math.exp(-smoothSpeed * dt);
+
+        // Set camera position
+        x = targetX;
+        y += (targetY - y) * t;
 
         cameraEdge(0, 0);
     }
 
+    public void reset(Player player) {
+        x = player.x - player.width - viewportWidth / 2;
+        y = player.y - viewportHeight / 2;
+    }
 
     public double getX() {
         return x;
