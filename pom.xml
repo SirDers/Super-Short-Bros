@@ -7,7 +7,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>SuperShortBros</artifactId>
-    <version>0.4.10-alpha</version>
+    <version>0.4.10</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,6 +39,8 @@
     </dependencies>
 
     <build>
+        <finalName>SuperShortBros</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.openjfx</groupId>
@@ -46,14 +48,36 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>game.Main</mainClass>
-                    <modules>
-                        <module>javafx.controls</module>
-                        <module>javafx.graphics</module>
-                        <module>javafx.media</module>
-                        <module>javafx.fxml</module>
-                    </modules>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.7.1</version>
+                <configuration>
+                    <input>target</input>
+                    <destination>builds/installer</destination>
+                    <type>APP_IMAGE</type>
+                    <mainJar>SuperShortBros.jar</mainJar>
+                    <mainClass>game.Main</mainClass>
+                    <name>Super Short Bros</name>
+                    <icon>resources/icon.ico</icon>
+                    <runtimeImage>target/image</runtimeImage>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>jpackage</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jpackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
+
 </project>

@@ -12,6 +12,7 @@ bin/
 classes/
 out/
 target/
+builds/
 
 # IDE setups
 .project
