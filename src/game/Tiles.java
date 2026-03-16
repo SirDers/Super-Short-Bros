@@ -1,3 +1,12 @@
+// !!! ATTENTION !!!
+/*
+ * This class is programmed HORRENDOUSLY.
+ *
+ * This system was made with the idea of less than 10 tiles being in the game, I did
+ * not know I would make this game as big as it is, and I did not give much thought
+ * to how this should be structured.
+ * */
+
 package game;
 
 /*

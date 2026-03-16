@@ -72,6 +72,7 @@ public class Store {
     }
     
 	// LEVEL LOAD
+    // Initialize file for data reading then select which level loader to use (V1 or V2)
 	public static void loadLevel(int num, Player player, ArrayList<PhysicsObject> objects, boolean isBackup) throws IOException {        
 		File level;
 		if (isBackup) {

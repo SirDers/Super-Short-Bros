@@ -1,6 +1,6 @@
 # Super-Short-Bros.
 ## Description
-A short 2D platformer written in JavaFX. This was my Computer Science 2 final project during my first year at University of Wisconsin-Stout. I wanted to challenge myself with a tile-scrolling 2D platformer. This was my first time making a game in Java and I used several work arounds to finish it on time, so there are many areas of improvement in the code.
+A short 2D platformer written in JavaFX. This was my Computer Science 2 final project during my first year at University of Wisconsin-Stout. I wanted to challenge myself with a tile-scrolling 2D platformer. This was my first time making a game in Java and I used several work arounds to finish it on time, so there are many areas of improvement in the code. Read the top comment in Main for more details.
 
 There are 4 levels:
 1. **Grass** -- Easy; teaches controls (Has secret exit)

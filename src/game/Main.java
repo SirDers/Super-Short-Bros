@@ -1,6 +1,33 @@
+/*
+ * README:
+ *
+ * This game functions very well, but the programming underneath is NOT good.
+ *
+ * When I first started making this project, I planned on making a very simple
+ * platformer with no tile-scrolling, and tiles that are either just 0 or 1,
+ * (1 being ground, 0 being air).
+ *
+ * Development went much faster than I expected, so I just kept adding to it:
+ * including tile-scrolling, level saving/loading, art, animations, importing
+ * third-party audio, etc.
+ *
+ * Because I was so focused on development and adding new things to the project,
+ * alongside learning Java and JavaFX, you will find terrible coding practices
+ * and wrong use of standard Java coding conventions, as well as a lack of
+ * comments.
+ *
+ * With every update, I still add to the project, and only occasionally
+ * restructure some parts of the code if it's quick and easy to make better;
+ * sometimes adding more comments.
+ *
+ * I'm more focused on my current projects, so please take a look at those to
+ * see how I've improved as a software engineer.
+ */
+
 package game;
 
-import java.io.IOException;import java.awt.Dimension;
+import java.io.IOException;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
