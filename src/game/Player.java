@@ -1,5 +1,10 @@
 package game;
 
+import game.state.Editor;
+import input.Controls;
+import render.Camera;
+import world.Tiles;
+
 import java.io.IOException;
 import java.util.ArrayList;
 

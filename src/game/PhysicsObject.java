@@ -1,5 +1,10 @@
 package game;
 
+import game.state.Editor;
+import render.Camera;
+import core.Main;
+import world.Tiles;
+
 import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;

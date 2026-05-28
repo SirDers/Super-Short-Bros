@@ -1,5 +1,8 @@
 package game;
 
+import input.Controls;
+import world.Tiles;
+
 import java.util.ArrayList;
 
 public abstract class Enemy extends PhysicsObject {

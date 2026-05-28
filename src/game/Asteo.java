@@ -1,5 +1,8 @@
 package game;
 
+import input.Controls;
+import world.Tiles;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 

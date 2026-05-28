@@ -1,4 +1,9 @@
-package game;
+package render;
+
+import game.Player;
+import world.Tiles;
+
+import core.Main;
 
 public class Camera {
     public static double x;

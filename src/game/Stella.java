@@ -1,5 +1,8 @@
 package game;
 
+import input.Controls;
+import world.Tiles;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.scene.image.Image;

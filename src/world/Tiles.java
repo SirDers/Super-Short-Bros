@@ -7,7 +7,14 @@
  * to how this should be structured.
  * */
 
-package game;
+package world;
+
+import game.PhysicsObject;
+import game.Player;
+import game.state.Editor;
+import input.Controls;
+import input.Mouse;
+import render.Camera;
 
 /*
  * Tile Types:
