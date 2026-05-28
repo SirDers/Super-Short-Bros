@@ -11,7 +11,7 @@ public class Stella extends PhysicsObject {
 	
 	public Stella(int tileX, int tileY, double width, double height, int level) {
 		super(tileX, tileY, width, height, level);
-		property = Tiles.level + 1;
+		property = Tiles.getLevel() + 1;
 	}
 	
 	public int getType() {

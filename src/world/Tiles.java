@@ -131,6 +131,22 @@ public class Tiles {
     	    new Image("file:resources/images/tiles/objectEdit.png"),
     };
     
+    public static int getLevel() {
+        return level;
+    }
+
+    public static void setLevel(int level) {
+        Tiles.level = level;
+    }
+
+    public static int getTheme() {
+        return theme;
+    }
+
+    public static void setTheme(int theme) {
+        Tiles.theme = theme;
+    }
+    
     
     
     public static void genNew(Player player, ArrayList<PhysicsObject> objects) {
@@ -173,7 +189,7 @@ public class Tiles {
                 double drawX = i * SIZE - (cameraX % SIZE);
                 double drawY = j * SIZE - (cameraY % SIZE);
                 
-                if (Editor.editMode) {
+                if (Editor.isEditMode()) {
                     gc.setStroke(Color.rgb(220, 220, 220, 0.1));
                     gc.setLineWidth(2);
                     gc.strokeRect(drawX, drawY, SIZE, SIZE);
@@ -186,7 +202,7 @@ public class Tiles {
     }
 
     public static void renderEdit(GraphicsContext gc, Player player) {
-        if (!Editor.editMode) return;
+        if (!Editor.isEditMode()) return;
 
         drawTile(gc, player, brush, drawEditTileX, drawEditTileY, true);
 
@@ -213,7 +229,7 @@ public class Tiles {
     
     private static void drawTile(GraphicsContext gc, Player player, int index, double drawX, double drawY, boolean isEdit) {
     	if (index == 9) {
-    		if (Editor.editMode)
+    		if (Editor.isEditMode())
     			gc.drawImage(tileImage[index], drawX + Tiles.SIZE*(0.375 - 1*1.25) + SIZE/2 - player.getWidth()/2, drawY - Tiles.SIZE/2.1 - player.getHeight() + Tiles.SIZE, SIZE*2.5, SIZE*2.5);
     		return;
     	}
@@ -222,15 +238,15 @@ public class Tiles {
     }
 
     public static void editor(GraphicsContext gc, TextField tf, Player player, ArrayList<PhysicsObject> objects) {
-    	if (Editor.editMode) {
+    	if (Editor.isEditMode()) {
             getBrush();
     		
-        	int tileX = (int) (Math.floor((Mouse.getX() + Camera.getCameraX()) / SIZE));
-        	int tileY = (int) (Math.floor((Mouse.getY() + Camera.getCameraY()) / SIZE));
+        	int tileX = (int) (Math.floor((Mouse.getX() + Camera.getActive().getX()) / SIZE));
+        	int tileY = (int) (Math.floor((Mouse.getY() + Camera.getActive().getY()) / SIZE));
         	
         	// Editing Tile:
-        	double offsetX = Camera.getCameraX() % SIZE;
-        	double offsetY = Camera.getCameraY() % SIZE;
+        	double offsetX = Camera.getActive().getX() % SIZE;
+        	double offsetY = Camera.getActive().getY() % SIZE;
         	drawEditTileX = (int) ((Mouse.getX() + offsetX) / SIZE) * SIZE - offsetX;
             drawEditTileY = (int) ((Mouse.getY() + offsetY) / SIZE) * SIZE - offsetY;
         	

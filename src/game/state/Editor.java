@@ -23,7 +23,7 @@ import javafx.scene.text.TextAlignment;
 public class Editor {
 
 	private static boolean devMode = true;
-	public static boolean editMode = true;
+	private static boolean editMode = true;
 	
 	private static String notif = "";
 	private static int frames = 0;
@@ -65,14 +65,14 @@ public class Editor {
         	editMode = !editMode;
         	if (editMode) {
             	try {
-    				Store.loadLevel(Tiles.level, player, objects, true);
+    				Store.loadLevel(Tiles.getLevel(), player, objects, true);
     			} catch (IOException e) {
     				// TODO Auto-generated catch block
     				e.printStackTrace();
     			}
         	} else {
         		try {
-    				Store.saveLevel(Tiles.level, objects, true);
+    				Store.saveLevel(Tiles.getLevel(), objects, true);
     			} catch (IOException e) {
     				e.printStackTrace();
     				System.out.println("Level failed to save!");
@@ -84,8 +84,8 @@ public class Editor {
     		// P: Saves level
     		if (Controls.isPressed(KeyCode.P)) {
             	try {
-					Store.saveLevel(Tiles.level, objects, false);
-    				notif = "Saved level " + Tiles.level + "!";
+					Store.saveLevel(Tiles.getLevel(), objects, false);
+    				notif = "Saved level " + Tiles.getLevel() + "!";
     			} catch (IOException e) {
     				e.printStackTrace();
     				System.out.println("Level failed to save!");
@@ -94,12 +94,12 @@ public class Editor {
     		
     		// T: Changes theme
     		if (Controls.isPressed(KeyCode.T)) {
-    			if (Tiles.theme < 4)
-    				Tiles.theme += 1;
+			if (Tiles.getTheme() < 4)
+				Tiles.setTheme(Tiles.getTheme() + 1);
     			else {
-    				Tiles.theme = 1;
+    				Tiles.setTheme(1);
     			}
-    			Music.setMusic(Tiles.theme);
+    			Music.setMusic(Tiles.getTheme());
         	}
     		
     		// Change Width and Height with arrows
@@ -192,6 +192,14 @@ public class Editor {
 		}
 
 		Tiles.grid = newGrid;
+	}
+
+	public static boolean isEditMode() {
+		return editMode;
+	}
+
+	public static void setEditMode(boolean editMode) {
+		Editor.editMode = editMode;
 	}
 
 	public static boolean isChanged() {

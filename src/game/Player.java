@@ -121,7 +121,7 @@ public class Player extends PhysicsObject {
     		return;
         }
         
-    	if (Editor.editMode) {
+    	if (Editor.isEditMode()) {
     		gc.drawImage(walk1, drawX + spritePosX, drawY - spritePosY, sizeFactor, sizeFactor);
     		return;
     	}
@@ -146,7 +146,7 @@ public class Player extends PhysicsObject {
     	double spritePosX = sizeFactor*(0.375 - flip*1.25)/2.5;
     	double spritePosY = sizeFactor/5.25;
     	
-    	if (Tiles.level == 4) {
+    	if (Tiles.getLevel() == 4) {
         	switch (piece) {
         	case "pawn":
                 gc.drawImage(pawn, drawX + spritePosX, drawY - spritePosY, flip*sizeFactor, sizeFactor);
@@ -232,7 +232,7 @@ public class Player extends PhysicsObject {
 
 	@Override
     public void fixedUpdate(ArrayList<PhysicsObject> objects) {
-    	if (Editor.editMode) {
+    	if (Editor.isEditMode()) {
         	moveEditMode();
     	}
     	else {
@@ -251,7 +251,7 @@ public class Player extends PhysicsObject {
     }
 	
 	private void changeState() {
-		if (Tiles.level != 4) {
+		if (Tiles.getLevel() != 4) {
 			return;
 			}
 		
@@ -277,7 +277,7 @@ public class Player extends PhysicsObject {
 					dead = false;
 					deadFrames = 0;
 					reset();
-					Store.loadLevel(Tiles.level, this, objects, false);
+					Store.loadLevel(Tiles.getLevel(), this, objects, false);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -292,8 +292,8 @@ public class Player extends PhysicsObject {
 				try {
 					dead = false;
 					deadFrames = 0;
-					Store.loadLevel(Tiles.level, this, objects, true);
-					Editor.editMode = true;
+					Store.loadLevel(Tiles.getLevel(), this, objects, true);
+					Editor.setEditMode(true);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

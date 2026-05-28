@@ -171,10 +171,10 @@ public class Main extends Application {
         player.start(camera);
         
         // Set and load level
-        Tiles.level = 1;
+        Tiles.setLevel(1);
         
         try {
-			Store.loadLevel(Tiles.level, player, objects, false);
+			Store.loadLevel(Tiles.getLevel(), player, objects, false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -205,7 +205,7 @@ public class Main extends Application {
             }
             
             // Resolve physics
-            if (!Editor.editMode) {
+            if (!Editor.isEditMode()) {
             	toRemove.clear();
             	player.sensor(objects, toRemove);
             	for (PhysicsObject object : objects) {
@@ -237,7 +237,7 @@ public class Main extends Application {
         
         // Darken background
         gc.setFill(Color.rgb(0, 0, 0, 0.2));
-        if (Tiles.theme == 4) gc.setFill(Color.rgb(0, 0, 0, 0.3));
+        if (Tiles.getTheme() == 4) gc.setFill(Color.rgb(0, 0, 0, 0.3));
         gc.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         
         Tiles.render(gc, textField, player, objects, camera.getX(), camera.getY(), TILE_COUNT_X, TILE_COUNT_Y);

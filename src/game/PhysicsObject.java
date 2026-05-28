@@ -147,8 +147,8 @@ public abstract class PhysicsObject {
     
 	public void fixedUpdate(ArrayList<PhysicsObject> objects) {
 		// Spawn object when it's in spawnBounds
-		boolean xSpawnBounds = (x - width/2 > Camera.getCameraX() + Tiles.SIZE*2 + Main.CANVAS_WIDTH) || (x + width/2 < Camera.getCameraX());
-		boolean ySpawnBounds = (y - height/2 > Camera.getCameraY() + Tiles.SIZE*2 + Main.CANVAS_HEIGHT) || (y + height/2 < Camera.getCameraY());
+		boolean xSpawnBounds = (x - width/2 > Camera.getActive().getX() + Tiles.SIZE*2 + Main.CANVAS_WIDTH) || (x + width/2 < Camera.getActive().getX());
+		boolean ySpawnBounds = (y - height/2 > Camera.getActive().getY() + Tiles.SIZE*2 + Main.CANVAS_HEIGHT) || (y + height/2 < Camera.getActive().getY());
 		boolean outOfSpawnBounds = xSpawnBounds || ySpawnBounds;
 		
 		if (!spawned && outOfSpawnBounds && this.getType() != 0) {
@@ -161,16 +161,16 @@ public abstract class PhysicsObject {
 		frames += 1;
 		
 		// Reset object if it leaves bounding area
-		boolean xBounds = (x > Camera.getCameraX() + 1.5*Main.CANVAS_WIDTH) || (x < Camera.getCameraX() - 1.5* Main.CANVAS_WIDTH);
-		boolean yBounds = (y > Camera.getCameraY() + 2*Main.CANVAS_HEIGHT) || (y < Camera.getCameraY() - 2*Main.CANVAS_HEIGHT);
+		boolean xBounds = (x > Camera.getActive().getX() + 1.5*Main.CANVAS_WIDTH) || (x < Camera.getActive().getX() - 1.5* Main.CANVAS_WIDTH);
+		boolean yBounds = (y > Camera.getActive().getY() + 2*Main.CANVAS_HEIGHT) || (y < Camera.getActive().getY() - 2*Main.CANVAS_HEIGHT);
 		boolean outOfBounds = xBounds || yBounds;
 		
 		// If spawn is on screen, dont' reset
-		boolean spawnXBounds = (spawnX - width/2 > Camera.getCameraX() + Main.CANVAS_WIDTH) || (spawnX + width/2 < Camera.getCameraX());
-		boolean spawnYBounds = (spawnY - height/2 > Camera.getCameraY() + Main.CANVAS_HEIGHT) || (spawnY + height/2 < Camera.getCameraY());
+		boolean spawnXBounds = (spawnX - width/2 > Camera.getActive().getX() + Main.CANVAS_WIDTH) || (spawnX + width/2 < Camera.getActive().getX());
+		boolean spawnYBounds = (spawnY - height/2 > Camera.getActive().getY() + Main.CANVAS_HEIGHT) || (spawnY + height/2 < Camera.getActive().getY());
 		boolean spawnOutOfBounds = spawnXBounds || spawnYBounds;
 		
-		if (Editor.editMode || (outOfBounds && spawnOutOfBounds)) {
+		if (Editor.isEditMode() || (outOfBounds && spawnOutOfBounds)) {
 			reset();
 			return;
 		}

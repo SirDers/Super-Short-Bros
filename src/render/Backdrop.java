@@ -37,13 +37,13 @@ public class Backdrop {
 		
 		switch(type) {
 		case 1:
-	        gc.drawImage(images[Tiles.theme-1][2], -cameraX * parallax, (yPoint - cameraY) * parallax, Main.CANVAS_WIDTH, Main.CANVAS_HEIGHT);
+	        gc.drawImage(images[Tiles.getTheme()-1][2], -cameraX * parallax, (yPoint - cameraY) * parallax, Main.CANVAS_WIDTH, Main.CANVAS_HEIGHT);
 	        break;
 		case 2:
-	        gc.drawImage(images[Tiles.theme-1][1], -cameraX * parallax, (yPoint - cameraY) * parallax, 64 * Tiles.SIZE, 18 * Tiles.SIZE);
+	        gc.drawImage(images[Tiles.getTheme()-1][1], -cameraX * parallax, (yPoint - cameraY) * parallax, 64 * Tiles.SIZE, 18 * Tiles.SIZE);
 	        break;
 		case 3:
-	        gc.drawImage(images[Tiles.theme-1][0], -cameraX * parallax, (yPoint - cameraY) * parallax, 64 * Tiles.SIZE, 18 * Tiles.SIZE);
+	        gc.drawImage(images[Tiles.getTheme()-1][0], -cameraX * parallax, (yPoint - cameraY) * parallax, 64 * Tiles.SIZE, 18 * Tiles.SIZE);
 	        break;
 		}
 	}

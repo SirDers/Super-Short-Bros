@@ -6,6 +6,7 @@ import world.Tiles;
 import core.Main;
 
 public class Camera {
+    private static Camera active;
     private static double x;
     private static double y;
     private final double viewportWidth;
@@ -14,6 +15,7 @@ public class Camera {
     public Camera(double viewportWidth, double viewportHeight) {
         this.viewportWidth = viewportWidth;
         this.viewportHeight = viewportHeight;
+        active = this;
     }
 
     public void update(Player player, double alpha, double dt) {
@@ -41,20 +43,16 @@ public class Camera {
         y = player.getY() - viewportHeight / 2;
     }
 
-    public static double getCameraX() {
-        return x;
-    }
-
-    public static double getCameraY() {
-        return y;
+    public static Camera getActive() {
+        return active;
     }
 
     public double getX() {
-        return getCameraX();
+        return x;
     }
 
     public double getY() {
-        return getCameraY();
+        return y;
     }
     
     private void cameraEdge(double edgeX, double edgeY) {

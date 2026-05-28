@@ -41,7 +41,7 @@ public class Store {
     	writeValue(dos, Tiles.HEIGHT, 0);
     	
     	// Save theme
-    	writeValue(dos, Tiles.theme, 0);
+    	writeValue(dos, Tiles.getTheme(), 0);
 
         // Save tile types
     	for (int[] row : Tiles.grid) {
@@ -118,8 +118,8 @@ public class Store {
 	
 	// LEVEL LOAD V0.4.9+
 	private static void loadLevelV2(int num, Player player, ArrayList<PhysicsObject> objects, boolean isBackup, DataInputStream dis) throws IOException {
-		int prevLevel = Tiles.level;
-		Tiles.level = num;
+		int prevLevel = Tiles.getLevel();
+		Tiles.setLevel(num);
     	
     	// Set width and height
     	Tiles.WIDTH = readValue(dis);
@@ -127,10 +127,10 @@ public class Store {
     	
         Tiles.grid = new int[Tiles.WIDTH][Tiles.HEIGHT];
         
-        Tiles.theme = readValue(dis);
+	        Tiles.setTheme(readValue(dis));
         
-        if (prevLevel != Tiles.level) {
-			Music.setMusic(Tiles.theme);
+        if (prevLevel != Tiles.getLevel()) {
+			Music.setMusic(Tiles.getTheme());
 		}
         
         // Set tile types
@@ -175,19 +175,19 @@ public class Store {
 	// LEVEL LOAD V0.4.8
 	private static void loadLevelV1(int num, Player player, ArrayList<PhysicsObject> objects, 
 			boolean isBackup, DataInputStream dis, int value1) throws IOException {
-		int prevLevel = Tiles.level;
-		Tiles.level = num;
+		int prevLevel = Tiles.getLevel();
+		Tiles.setLevel(num);
 		
-		if (Tiles.level == 3) {
-			Tiles.theme = 2;
-		} else if (Tiles.level == 4) {
-			Tiles.theme = 4;
+		if (Tiles.getLevel() == 3) {
+			Tiles.setTheme(2);
+		} else if (Tiles.getLevel() == 4) {
+			Tiles.setTheme(4);
 		} else {
-			Tiles.theme = 1;
+			Tiles.setTheme(1);
 		}
 		
-		if (prevLevel != Tiles.level) {
-			Music.setMusic(Tiles.theme);
+		if (prevLevel != Tiles.getLevel()) {
+			Music.setMusic(Tiles.getTheme());
 		}
     	
     	// Set width and height
