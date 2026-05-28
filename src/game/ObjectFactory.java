@@ -1,5 +1,7 @@
 package game;
 
+import world.Tiles;
+
 public class ObjectFactory {
     public static PhysicsObject createObject(int type, int spawnX, int spawnY, int level) {
         switch (type) {

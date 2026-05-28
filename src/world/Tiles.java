@@ -7,7 +7,15 @@
  * to how this should be structured.
  * */
 
-package game;
+package world;
+
+import game.ObjectFactory;
+import game.PhysicsObject;
+import game.Player;
+import game.state.Editor;
+import input.Controls;
+import input.Mouse;
+import render.Camera;
 
 /*
  * Tile Types:
@@ -136,7 +144,7 @@ public class Tiles {
         objects.clear();
     	
     	// Set spawn
-    	grid[(int) player.spawnX/SIZE][(int) player.spawnY/SIZE + 1] = 9;
+    	grid[(int) player.getSpawnX()/SIZE][(int) player.getSpawnY()/SIZE + 1] = 9;
 
     	// Generate starting ground
     	for (int i = 0 ; i < 7 ; i++) {
@@ -206,7 +214,7 @@ public class Tiles {
     private static void drawTile(GraphicsContext gc, Player player, int index, double drawX, double drawY, boolean isEdit) {
     	if (index == 9) {
     		if (Editor.editMode)
-    			gc.drawImage(tileImage[index], drawX + Tiles.SIZE*(0.375 - 1*1.25) + SIZE/2 - player.width/2, drawY - Tiles.SIZE/2.1 - player.height + Tiles.SIZE, SIZE*2.5, SIZE*2.5);
+    			gc.drawImage(tileImage[index], drawX + Tiles.SIZE*(0.375 - 1*1.25) + SIZE/2 - player.getWidth()/2, drawY - Tiles.SIZE/2.1 - player.getHeight() + Tiles.SIZE, SIZE*2.5, SIZE*2.5);
     		return;
     	}
     	if (index != 0 || isEdit)
@@ -217,17 +225,17 @@ public class Tiles {
     	if (Editor.editMode) {
             getBrush();
     		
-        	int tileX = (int) (Math.floor((Mouse.x + Camera.x) / SIZE));
-        	int tileY = (int) (Math.floor((Mouse.y + Camera.y) / SIZE));
+        	int tileX = (int) (Math.floor((Mouse.getX() + Camera.getCameraX()) / SIZE));
+        	int tileY = (int) (Math.floor((Mouse.getY() + Camera.getCameraY()) / SIZE));
         	
         	// Editing Tile:
-        	double offsetX = Camera.x % SIZE;
-        	double offsetY = Camera.y % SIZE;
-        	drawEditTileX = (int) ((Mouse.x + offsetX) / SIZE) * SIZE - offsetX;
-            drawEditTileY = (int) ((Mouse.y + offsetY) / SIZE) * SIZE - offsetY;
+        	double offsetX = Camera.getCameraX() % SIZE;
+        	double offsetY = Camera.getCameraY() % SIZE;
+        	drawEditTileX = (int) ((Mouse.getX() + offsetX) / SIZE) * SIZE - offsetX;
+            drawEditTileY = (int) ((Mouse.getY() + offsetY) / SIZE) * SIZE - offsetY;
         	
         	// Edit level:
-        	if (Mouse.isDown) {
+        	if (Mouse.isDown()) {
         		editLevel(objects, player, tileX, tileY);
         		Editor.setChanged(true);
         	}
@@ -242,7 +250,7 @@ public class Tiles {
 			// Checks for overlap
 			boolean canPlace = true;
 			for (PhysicsObject checkObject : objects) {
-				if (tileX == checkObject.tileX && tileY == checkObject.tileY) {
+				if (tileX == checkObject.getTileX() && tileY == checkObject.getTileY()) {
 					canPlace = false;
 					break;
 				}
@@ -255,7 +263,7 @@ public class Tiles {
 		} else if (brush == 12) {
 			// Erases objects
 			for (PhysicsObject checkObject : objects) {
-				if (tileX == checkObject.tileX && tileY == checkObject.tileY) {
+				if (tileX == checkObject.getTileX() && tileY == checkObject.getTileY()) {
 					objects.remove(checkObject);
 					break;
 				}
@@ -263,14 +271,14 @@ public class Tiles {
 		} else if (brush == 14) {
 			// Edit objects
 			for (PhysicsObject object : objects) {
-				if (tileX == object.tileX && tileY == object.tileY) {
+				if (tileX == object.getTileX() && tileY == object.getTileY()) {
 					// Change object property
 				}
 			}
 		} else if (brush == 15) {
 			// Edit tiles
 			for (PhysicsObject object : objects) {
-				if (tileX == object.tileX && tileY == object.tileY) {
+				if (tileX == object.getTileX() && tileY == object.getTileY()) {
 					// Change tile property
 				}
 			}

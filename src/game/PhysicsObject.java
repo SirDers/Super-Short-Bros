@@ -1,5 +1,10 @@
 package game;
 
+import game.state.Editor;
+import render.Camera;
+import core.Main;
+import world.Tiles;
+
 import java.util.ArrayList;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -142,8 +147,8 @@ public abstract class PhysicsObject {
     
 	public void fixedUpdate(ArrayList<PhysicsObject> objects) {
 		// Spawn object when it's in spawnBounds
-		boolean xSpawnBounds = (x - width/2 > Camera.x + Tiles.SIZE*2 + Main.CANVAS_WIDTH) || (x + width/2 < Camera.x);
-		boolean ySpawnBounds = (y - height/2 > Camera.y + Tiles.SIZE*2 + Main.CANVAS_HEIGHT) || (y + height/2 < Camera.y);
+		boolean xSpawnBounds = (x - width/2 > Camera.getCameraX() + Tiles.SIZE*2 + Main.CANVAS_WIDTH) || (x + width/2 < Camera.getCameraX());
+		boolean ySpawnBounds = (y - height/2 > Camera.getCameraY() + Tiles.SIZE*2 + Main.CANVAS_HEIGHT) || (y + height/2 < Camera.getCameraY());
 		boolean outOfSpawnBounds = xSpawnBounds || ySpawnBounds;
 		
 		if (!spawned && outOfSpawnBounds && this.getType() != 0) {
@@ -156,13 +161,13 @@ public abstract class PhysicsObject {
 		frames += 1;
 		
 		// Reset object if it leaves bounding area
-		boolean xBounds = (x > Camera.x + 1.5*Main.CANVAS_WIDTH) || (x < Camera.x - 1.5* Main.CANVAS_WIDTH);
-		boolean yBounds = (y > Camera.y + 2*Main.CANVAS_HEIGHT) || (y < Camera.y - 2*Main.CANVAS_HEIGHT);
+		boolean xBounds = (x > Camera.getCameraX() + 1.5*Main.CANVAS_WIDTH) || (x < Camera.getCameraX() - 1.5* Main.CANVAS_WIDTH);
+		boolean yBounds = (y > Camera.getCameraY() + 2*Main.CANVAS_HEIGHT) || (y < Camera.getCameraY() - 2*Main.CANVAS_HEIGHT);
 		boolean outOfBounds = xBounds || yBounds;
 		
 		// If spawn is on screen, dont' reset
-		boolean spawnXBounds = (spawnX - width/2 > Camera.x + Main.CANVAS_WIDTH) || (spawnX + width/2 < Camera.x);
-		boolean spawnYBounds = (spawnY - height/2 > Camera.y + Main.CANVAS_HEIGHT) || (spawnY + height/2 < Camera.y);
+		boolean spawnXBounds = (spawnX - width/2 > Camera.getCameraX() + Main.CANVAS_WIDTH) || (spawnX + width/2 < Camera.getCameraX());
+		boolean spawnYBounds = (spawnY - height/2 > Camera.getCameraY() + Main.CANVAS_HEIGHT) || (spawnY + height/2 < Camera.getCameraY());
 		boolean spawnOutOfBounds = spawnXBounds || spawnYBounds;
 		
 		if (Editor.editMode || (outOfBounds && spawnOutOfBounds)) {
@@ -273,7 +278,7 @@ public abstract class PhysicsObject {
 		// Do nothing
 	}
 	
-    protected void sensor(ArrayList<PhysicsObject> objects, ArrayList<PhysicsObject> toRemove) {
+    public void sensor(ArrayList<PhysicsObject> objects, ArrayList<PhysicsObject> toRemove) {
     	// Fell into void
     	if (y > (Tiles.HEIGHT + 2)*Tiles.SIZE) {
     		death(objects, toRemove);
@@ -367,14 +372,25 @@ public abstract class PhysicsObject {
     }
 
 	// Save previous states
-	protected void savePreviousState() {
+	public void savePreviousState() {
 		prevX = x;
 		prevY = y;
 	}
 
+	public double getX() { return x; }
+	public double getY() { return y; }
+	public double getPrevX() { return prevX; }
+	public double getPrevY() { return prevY; }
+	public double getWidth() { return width; }
+	public double getHeight() { return height; }
+	public double getSpawnX() { return spawnX; }
+	public double getSpawnY() { return spawnY; }
+	public int getTileX() { return tileX; }
+	public int getTileY() { return tileY; }
+
     
     // Visuals:
-    protected void draw(GraphicsContext gc, double cameraX, double cameraY, double alpha) {
+    public void draw(GraphicsContext gc, double cameraX, double cameraY, double alpha) {
 		double renderX = prevX * (1 - alpha) + x * alpha;
 		double renderY = prevY * (1 - alpha) + y * alpha;
 
