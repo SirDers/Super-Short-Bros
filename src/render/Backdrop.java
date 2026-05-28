@@ -1,7 +1,11 @@
-package game;
+package render;
+
+import world.Tiles;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+
+import core.Main;
 
 public class Backdrop {
     
