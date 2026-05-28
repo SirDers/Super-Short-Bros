@@ -111,7 +111,7 @@ public class Editor {
     			Tiles.HEIGHT++;
     			recreateGrid("UP");
     			for (PhysicsObject object : objects) {
-    				object.setSpawn(object.tileX, object.tileY + 1);
+    				object.setSpawn(object.getTileX(), object.getTileY() + 1);
     			}
         	}
     		if (Controls.isPressed(KeyCode.RIGHT)) {
@@ -122,7 +122,7 @@ public class Editor {
     			Tiles.HEIGHT--;
     			recreateGrid("DOWN");
     			for (PhysicsObject object : objects) {
-    				object.setSpawn(object.tileX, object.tileY - 1);
+    				object.setSpawn(object.getTileX(), object.getTileY() - 1);
     			}
         	}
     	}

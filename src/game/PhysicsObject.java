@@ -278,7 +278,7 @@ public abstract class PhysicsObject {
 		// Do nothing
 	}
 	
-    protected void sensor(ArrayList<PhysicsObject> objects, ArrayList<PhysicsObject> toRemove) {
+    public void sensor(ArrayList<PhysicsObject> objects, ArrayList<PhysicsObject> toRemove) {
     	// Fell into void
     	if (y > (Tiles.HEIGHT + 2)*Tiles.SIZE) {
     		death(objects, toRemove);
@@ -372,14 +372,14 @@ public abstract class PhysicsObject {
     }
 
 	// Save previous states
-	protected void savePreviousState() {
+	public void savePreviousState() {
 		prevX = x;
 		prevY = y;
 	}
 
     
     // Visuals:
-    protected void draw(GraphicsContext gc, double cameraX, double cameraY, double alpha) {
+    public void draw(GraphicsContext gc, double cameraX, double cameraY, double alpha) {
 		double renderX = prevX * (1 - alpha) + x * alpha;
 		double renderY = prevY * (1 - alpha) + y * alpha;
 

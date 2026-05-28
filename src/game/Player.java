@@ -88,7 +88,7 @@ public class Player extends PhysicsObject {
     }
 
     @Override
-    protected void draw(GraphicsContext gc, double cameraX, double cameraY, double alpha) {
+    public void draw(GraphicsContext gc, double cameraX, double cameraY, double alpha) {
 		double renderX = prevX * (1 - alpha) + x * alpha;
 		double renderY = prevY * (1 - alpha) + y * alpha;
 
