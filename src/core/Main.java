@@ -24,7 +24,18 @@
  * see how I've improved as a software engineer.
  */
 
-package game;
+package core;
+
+import game.Music;
+import game.PhysicsObject;
+import game.Player;
+import game.Store;
+import game.state.Editor;
+import input.Controls;
+import input.Mouse;
+import render.Backdrop;
+import render.Camera;
+import world.Tiles;
 
 import java.io.IOException;
 import java.awt.Dimension;

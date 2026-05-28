@@ -1,10 +1,14 @@
 package game;
 
+import world.Tiles;
+
 import java.nio.file.Paths;
 import javafx.animation.AnimationTimer;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+
+import game.state.Editor;
 
 public class Music {
 

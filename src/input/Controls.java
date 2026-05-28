@@ -1,4 +1,4 @@
-package game;
+package input;
 
 import java.util.HashSet;
 import java.util.Set;

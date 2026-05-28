@@ -1,5 +1,7 @@
 package game;
 
+import world.Tiles;
+
 import javafx.scene.image.Image;
 
 public class Soliseye extends Enemy {
