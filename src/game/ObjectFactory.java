@@ -1,5 +1,7 @@
 package game;
 
+import world.Tiles;
+
 public class ObjectFactory {
     public static PhysicsObject createObject(int type, int spawnX, int spawnY, int level) {
         switch (type) {
@@ -14,7 +16,7 @@ public class ObjectFactory {
             case 4:
                 return new Masteo(spawnX, spawnY, 0.99, 0.99, -2.0/64, 637.0/1920, 21.0/64, 7.0/16);
             case 5:
-                return new Soliseye(spawnX, spawnY, 0.99, 0.99, 0, Tiles.SIZE/8.0, 0, 0);
+                return new Soliseye(spawnX, spawnY, 0.99, 0.99, 0, Tiles.getSize()/8.0, 0, 0);
             default:
                 throw new IllegalArgumentException("Unknown PhysicsObject type: " + type);
         }

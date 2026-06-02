@@ -1,13 +1,25 @@
-package game;
+package input;
 
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 
 public class Mouse {
 
-	public static double x = 0;
-	public static double y = 0;
-	public static boolean isDown = false;
+	private static double x = 0;
+	private static double y = 0;
+	private static boolean isDown = false;
+
+	public static double getX() {
+		return x;
+	}
+
+	public static double getY() {
+		return y;
+	}
+
+	public static boolean isDown() {
+		return isDown;
+	}
 	
 	public static void setup(Scene scene) {
 		

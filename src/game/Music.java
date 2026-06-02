@@ -1,10 +1,14 @@
 package game;
 
+import world.Tiles;
+
 import java.nio.file.Paths;
 import javafx.animation.AnimationTimer;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+
+import game.state.Editor;
 
 public class Music {
 
@@ -16,18 +20,18 @@ public class Music {
 
     public static void setup(Stage stage) {
         try {
-    		Music.setMusic(Tiles.theme);
+    		Music.setMusic(Tiles.getTheme());
 
             new Thread(() -> {
-                boolean previousEditMode = Editor.editMode;
+                boolean previousEditMode = Editor.isEditMode();
                 while (stage.isShowing()) {
-                    if (Editor.editMode != previousEditMode) {
-                        previousEditMode = Editor.editMode;
+                    if (Editor.isEditMode() != previousEditMode) {
+                        previousEditMode = Editor.isEditMode();
 
                         double currentTime = currentPlayer.getCurrentTime().toSeconds();
 
-                        String newSongPath = Editor.editMode ? editSongPath : currentSongPath;
-                		if (Tiles.theme != 4 && Tiles.theme != 2)
+                        String newSongPath = Editor.isEditMode() ? editSongPath : currentSongPath;
+                		if (Tiles.getTheme() != 4 && Tiles.getTheme() != 2)
                 			fadeTransitionSimultaneous(newSongPath, currentTime);
                     }
 
@@ -56,7 +60,7 @@ public class Music {
             playSong(currentSongPath, 0);
             return;
         }
-        playSong(Editor.editMode ? editSongPath : currentSongPath, 0);
+        playSong(Editor.isEditMode() ? editSongPath : currentSongPath, 0);
     }
 
     private static void playSong(String songPath, double startTime) {
