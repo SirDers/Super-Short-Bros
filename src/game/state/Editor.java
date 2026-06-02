@@ -8,7 +8,6 @@ import game.Store;
 import input.Controls;
 import world.Tiles;
 
-import java.awt.TextField;
 import java.io.IOException;
 //import java.util.Scanner;
 import java.util.ArrayList;
@@ -39,10 +38,6 @@ public class Editor {
             editMode = false;
             return;
         }
-
-        //Scanner scr = new Scanner(System.in);
-        TextField numberInput = new TextField();
-        numberInput.setText("Type a number: ");
 
         // Handle notification time
         if (!notif.isEmpty() && !"Unsaved changes".equals(notif)) {

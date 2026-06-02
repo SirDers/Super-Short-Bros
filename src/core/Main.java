@@ -39,16 +39,15 @@ import render.GameRenderer;
 import world.Tiles;
 
 import java.io.IOException;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.geometry.Rectangle2D;
 
 public class Main extends Application {
     private static int TILE_COUNT_X = 33; // Visible tiles horizontally
@@ -82,11 +81,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        // Get computer screen resolution
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Dimension screenSize = toolkit.getScreenSize();
-        CANVAS_WIDTH = (int) screenSize.getWidth();
-        CANVAS_HEIGHT = (int) screenSize.getHeight();
+        // Get computer screen resolution using JavaFX APIs to avoid AWT/native Toolkit dependencies.
+        Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+        CANVAS_WIDTH = (int) screenBounds.getWidth();
+        CANVAS_HEIGHT = (int) screenBounds.getHeight();
 
         // Always have 21 tiles visible vertically
         TILE_COUNT_X = TILE_COUNT_Y * CANVAS_WIDTH / CANVAS_HEIGHT;
